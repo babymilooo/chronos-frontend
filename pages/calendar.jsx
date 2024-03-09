@@ -1,6 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
-import $api from '../app/https/axios';
-import { API_URL } from './../app/https/axios';
+import { useContext, useState } from 'react';
 import { Context } from './_app';
 import { observer } from 'mobx-react-lite';
 import GetHolidays from '@/app/components/GetHolidays';

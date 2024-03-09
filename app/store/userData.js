@@ -33,11 +33,6 @@ class UserStore {
         this.isLoading = isLoading;
     }
 
-
-    getUserId() {
-        return this.user.id;
-    }
-
     async checkAuth() {
         try {
             const response = await AuthService.chechAuth();
@@ -55,7 +50,6 @@ class UserStore {
     async login(email, password) {
         try {
             const response = await AuthService.login(email, password);
-            console.log('login');
             this.setUser(response.data.user);
             this.setIsLoading(false);
             localStorage.setItem('accesstoken', response.data.accessToken);
@@ -80,7 +74,7 @@ class UserStore {
 
     async logout() {
         try {
-            const response = await AuthService.logout();
+            await AuthService.logout();
             this.setUser({ username: '', id: '', image: '', bio: '', isLoading: false });
             localStorage.clear('accesstoken');
         }
