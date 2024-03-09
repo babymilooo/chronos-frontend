@@ -1,4 +1,3 @@
-import axios from 'axios';
 import $api from '../https/axios';
 import { API_URL } from '../https/axios';
 

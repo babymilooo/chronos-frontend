@@ -9,7 +9,7 @@ const login = () => {
     const { userStore } = useContext(Context);
 
     useEffect(() => {
-        if (userStore.isLoading) {
+        if (!userStore.isLoading) {
             Router.push('/calendar');
         }
     }

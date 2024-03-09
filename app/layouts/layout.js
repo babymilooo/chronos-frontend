@@ -1,5 +1,6 @@
 import { Context } from "@/pages/_app";
 import Head from "next/head";
+import Router from "next/router";
 import { useContext, useEffect, useState } from "react";
 
 export default function RootLayout({ children }) {

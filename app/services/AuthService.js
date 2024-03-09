@@ -1,7 +1,6 @@
 import axios from 'axios';
 import $api from '../https/axios';
 import { API_URL } from '../https/axios';
-import Router from 'next/router';
 
 export default class AuthService {
     static async login(email, password) {

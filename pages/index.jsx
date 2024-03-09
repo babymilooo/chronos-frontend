@@ -11,7 +11,7 @@ const index = () => {
         } else {
             Router.push('/login');
         }
-    }, [userStore.getisAuth, Router]);
+    }, [Router]);
 
     return null;
 };

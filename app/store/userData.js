@@ -46,7 +46,7 @@ class UserStore {
             this.setIsLoading(false);
         } catch (e) {
             if (e.response.status === 401) {
-                Router.push('/login');
+                await Router.push('/login');
             }
             console.error(e.response?.data?.message);
         }
