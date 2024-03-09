@@ -26,4 +26,13 @@ export default class CalendarService {
         }
     }
 
+    static async createEvent(title, date, startTime, endTime, user, coOwners = [], attendees = []) {
+        try {
+            await $api.post(`${API_URL}/events`, { title, date, startTime, endTime, user, coOwners, attendees });
+            return true;
+        } catch (error) {
+            console.error('Произошла ошибка при создании события:', error);
+            return false;
+        }
+    }
 }

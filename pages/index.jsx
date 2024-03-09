@@ -6,9 +6,7 @@ const index = () => {
     const { userStore } = useContext(Context);
 
     useEffect(() => {
-        if (userStore.isLoading) {
-            Router.push('/calendar');
-        } else {
+        if (!userStore.isLoading) {
             Router.push('/login');
         }
     }, [Router]);

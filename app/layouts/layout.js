@@ -1,16 +1,16 @@
 import { Context } from "@/pages/_app";
 import Head from "next/head";
-import Router from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
+import { observer } from 'mobx-react-lite';
 
-export default function RootLayout({ children }) {
+const RootLayout = ({ children }) => {
     const { userStore } = useContext(Context);
 
     useEffect(() => {
         const checkAuthentication = async () => {
             await userStore.checkAuth();
         };
-
+        
         checkAuthentication();
     }, []);
 
@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
         <>
             <Head>
                 <title>Next.js App</title>
-                <link rel="icon" href="./favicon.ico" />
+                <link rel="icon" href="../favicon.ico" />
                 <meta name="description" content="Next.js App" />
             </Head>
             <div>
@@ -27,3 +27,5 @@ export default function RootLayout({ children }) {
         </>
     )
 }
+
+export default observer(RootLayout);
