@@ -39,8 +39,6 @@ class UserStore {
             this.setUser(response.data.user);
             this.setIsLoading(false);
         } catch (e) {
-            console.log("ERROR");
-            console.log(e);
             if (e.response.status === 401) {
                 await Router.push('/login');
             }
