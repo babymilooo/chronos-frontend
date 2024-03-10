@@ -23,15 +23,14 @@ const GetEvents = ({ currentYear, id }) => {
         getEvents();
     }, []);
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
     return (
         <div>
-            {events.map((event, index) => (
-                <li key={index}>{event.title}</li>
-            ))}
+            {loading ? <div>Loading...</div> :
+                <>
+                    {events.map((event, index) => (
+                        <li key={index}>{event.title}</li>
+                    ))}
+                </>}
         </div>
     );
 };

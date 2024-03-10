@@ -4,16 +4,18 @@ import Router from "next/router";
 
 
 const createNewEvent = (id) => {
-    const [title, setTitle] = useState("");
-    const [date, setDate] = useState("");
-    const [startTime, setStartTime] = useState("");
-    const [endTime, setEndTime] = useState("");
-    const [user, setUser] = useState("");
-    const [coOwners, setCoOwners] = useState([]);
-    const [attendees, setAttendees] = useState([]);
+
+    const [form, setForm] = useState({
+        title: '',
+        date: '',
+        startTime: '',
+        endTime: '',
+        coOwners: [],
+        attendees: []
+    });
 
     const handleEvent = async () => {
-        const result = await CalendarService.createEvent(title, date, startTime, endTime, id, coOwners, attendees);
+        const result = await CalendarService.createEvent(...form, id);
         if (result) {
             Router.push('/calendar');
         } else {
@@ -29,37 +31,38 @@ const createNewEvent = (id) => {
         <div>
             <input type="text"
                 className="border border-gray-900"
-                value={title}
-                onChange={e => setTitle(e.target.value)}
+                name="title"
+                onChange={e => setForm({ ...form, title: e.target.value })}
             />
 
             <input type="date"
-                value={date}
-                onChange={e => setDate(e.target.value)}
+                name="date"
+                onChange={e => setForm({ ...form, title: e.target.value })}
+
                 className="border border-gray-900"
             />
 
             <input type="time"
-                value={startTime}
-                onChange={e => setStartTime(e.target.value)}
+                name="startTime"
+                onChange={e => setForm({ ...form, title: e.target.value })}
                 className="border border-gray-900"
             />
 
             <input type="time"
-                value={endTime}
-                onChange={e => setEndTime(e.target.value)}
+                name="endTime"
+                onChange={e => setForm({ ...form, title: e.target.value })}
                 className="border border-gray-900"
             />
 
             <input type="text"
-                value={coOwners}
-                onChange={e => setCoOwners(e.target.value)}
+                name="coOwners"
+                onChange={e => setForm({ ...form, title: e.target.value })}
                 className="border border-gray-900"
             />
 
             <input type="text"
-                value={attendees}
-                onChange={e => setAttendees(e.target.value)}
+                name="attendees"
+                onChange={e => setForm({ ...form, title: e.target.value })}
                 className="border border-gray-900"
             />
 

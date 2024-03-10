@@ -16,7 +16,6 @@ class UserStore {
         this.user = user || this.user;
     }
 
-
     // Метод для установки данных пользователя
     setUser(user) {
         this.user = user;

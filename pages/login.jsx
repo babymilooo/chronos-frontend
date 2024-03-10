@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "./_app";
 import Router from "next/router";
 import Link from "next/link";
+import { observer } from "mobx-react-lite";
 
 const login = () => {
     const [email, setEmail] = useState('');
@@ -9,7 +10,7 @@ const login = () => {
     const { userStore } = useContext(Context);
 
     useEffect(() => {
-        if (userStore.isLoading) {
+        if (!userStore.isLoading) {
             Router.push('/calendar');
         }
     }
@@ -46,4 +47,4 @@ const login = () => {
     );
 };
 
-export default login;
+export default observer(login);

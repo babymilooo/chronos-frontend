@@ -2,6 +2,7 @@ import { Context } from "@/pages/_app";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 import { observer } from 'mobx-react-lite';
+import Router from "next/router";
 
 const RootLayout = ({ children }) => {
     const { userStore } = useContext(Context);
@@ -10,7 +11,7 @@ const RootLayout = ({ children }) => {
         const checkAuthentication = async () => {
             await userStore.checkAuth();
         };
-        
+
         checkAuthentication();
     }, []);
 

@@ -1,17 +1,19 @@
 import { Context } from "./_app";
 import { useContext, useEffect } from "react";
 import Router from "next/router";
+import { observer } from 'mobx-react-lite';
 
 const index = () => {
     const { userStore } = useContext(Context);
 
     useEffect(() => {
         if (!userStore.isLoading) {
-            Router.push('/login');
+            Router.push('/calendar');
         }
-    }, [Router]);
+        
+    }, [userStore.isLoading]);
 
     return null;
 };
 
-export default index;
+export default observer(index);

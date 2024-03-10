@@ -9,23 +9,19 @@ const calendar = () => {
     const { userStore } = useContext(Context);
     const [currentYear, setCurrentYear] = useState((new Date()).getFullYear());
 
-    if (userStore.isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    const handeClick = () => {
-        Router.push('/calendar/createNewEvent')
-    };
-
     return (
         <div>
-            <h1>Календарь</h1>
-            <ul>
-                <GetHolidays currentYear={currentYear} />
-                <GetEvents currentYear={currentYear} id={userStore.user.id} />
-                <p>{userStore.user.username}</p>
-                <button onClick={handeClick} className="border-2 border-black">create new</button>
-            </ul>
+            {userStore.isLoading ? <div>Loading...</div> :
+                <>
+                    <h1>Календарь</h1>
+                    <ul>
+                        <GetHolidays currentYear={currentYear} />
+                        <GetEvents currentYear={currentYear} id={userStore.user.id} />
+                        <p>{userStore.user.username}</p>
+                        <button onClick={() => { Router.push('/calendar/createNewEvent') }} className="border-2 border-black">create new</button>
+                        <button onClick={() => { Router.push('/users') }} className="border-2 border-black">users</button>
+                    </ul>
+                </>}
         </div>
     );
 };
