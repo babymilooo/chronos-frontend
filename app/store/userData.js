@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import AuthService from '../services/AuthService';
 import Router from 'next/router';
 
@@ -35,9 +35,12 @@ class UserStore {
     async checkAuth() {
         try {
             const response = await AuthService.chechAuth();
-            localStorage.setItem('accesstoken', response.data.accessToken);
-            this.setUser(response.data.user);
-            this.setIsLoading(false);
+            runInAction(() => {
+                console.log("render");
+                this.setUser(response.data.user);
+                this.setIsLoading(false);
+                localStorage.setItem('accesstoken', response.data.accessToken);
+            });
         } catch (e) {
             if (e.response.status === 401) {
                 await Router.push('/login');

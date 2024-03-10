@@ -1,18 +1,18 @@
 import { useContext, useEffect, useState } from "react";
-import UserService from "../services/UserService";
+import { Context } from "../_app";
+import UserService from "@/app/services/UserService";
+import { observer } from "mobx-react-lite";
 import Router from "next/router";
-import { Context } from "@/pages/_app";
-import { observer } from 'mobx-react-lite';
 
-const GetUsers = () => {
+const friends = () => {
 
     const { userStore } = useContext(Context);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    async function getUsers() {
+    async function getFriends() {
         try {
-            const response = await UserService.getUsers(userStore.user.id);
+            const response = await UserService.getFriends(userStore.user.id);
             setUsers(response.users);
 
             setLoading(false);
@@ -24,10 +24,10 @@ const GetUsers = () => {
 
     useEffect(() => {
         if (!userStore.isLoading) {
-            getUsers();
+            getFriends();
         }
     }, [userStore.user]);
-    
+
     return (
         <div>
             {loading ? <div>Loading...</div> :
@@ -44,4 +44,4 @@ const GetUsers = () => {
     );
 };
 
-export default observer(GetUsers);
+export default observer(friends);

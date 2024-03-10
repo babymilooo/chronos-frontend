@@ -1,31 +1,64 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import UserService from "@/app/services/UserService";
 import { useRouter } from "next/router";
 
-const user = () => {
+const userPage = () => {
     const router = useRouter();
-    const { id } = router.query;
     const [user, setUser] = useState({});
+    const [isFriend, setIsFriend] = useState(false);
 
-    const getUser = async () => {
+    async function getUser(id) {
         try {
             const response = await UserService.getUser(id);
-            setUser(response.user);
+            setUser(response);
+        } catch (error) {
+            console.error("Error getting user:", error);
+        }
+    }
+
+    async function checkIsFriend(id) {
+        try {
+            const response = await UserService.isFriend(id);
+            setIsFriend(response.isFriend);
         } catch (error) {
             console.error("Error getting user:", error);
         }
     }
 
     useEffect(() => {
-        getUser();
-    }, []);
+        const { id } = router.query;
+
+        if (id) {
+            getUser(id);
+            checkIsFriend(id);
+        }
+
+    }, [router.query]);
+
+    const handeClick = async () => {
+        try {
+            const response = await UserService.addToFriend(user.id);
+        } catch (error) {
+            console.error("Error adding to friend:", error);
+        }
+    }
 
     return (
         <div>
-            <h1>{user.username}</h1>
-            <p>{user.email}</p>
+            {user && (
+                <>
+                    <h1>{user.username}</h1>
+                    {isFriend ? <p>is friend</p> :
+                        <button
+                            className="border border-gray-700"
+                            onClick={handeClick}
+                        >add to friend</button>}
+
+                </>
+            )}
+
         </div>
     );
 };
 
-export default user;
+export default userPage;

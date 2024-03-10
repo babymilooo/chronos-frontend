@@ -20,6 +20,7 @@ const calendar = () => {
                         <p>{userStore.user.username}</p>
                         <button onClick={() => { Router.push('/calendar/createNewEvent') }} className="border-2 border-black">create new</button>
                         <button onClick={() => { Router.push('/users') }} className="border-2 border-black">users</button>
+                        <button onClick={() => { Router.push('/users/friends') }} className="border-2 border-black">friends</button>
                     </ul>
                 </>}
         </div>

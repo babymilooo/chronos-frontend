@@ -7,7 +7,7 @@ const users = () => {
 
     return (
         <div>
-            <h1>users</h1>
+            <h1 className="font-bold text-3xl">users</h1>
             <GetUsers />
         </div>
     );
