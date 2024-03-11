@@ -3,10 +3,11 @@ import { Context } from "../_app";
 import UserService from "@/app/services/UserService";
 import { observer } from "mobx-react-lite";
 import Router from "next/router";
+import { UserContext } from "@/app/Contexts/Contexts";
 
 const friends = () => {
 
-    const { userStore } = useContext(Context);
+    const { userStore } = useContext(UserContext);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 

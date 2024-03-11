@@ -1,46 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import CalendarService from '../services/CalendarService';
+import HolidaysFunc from '../utils/holidays-utils';
 
 const getHolidays = ({ currentYear }) => {
 
     const [holidays, setHolidays] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    async function getCountryAndCity(latitude, longitude) {
-        try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=en`);
-            const data = await response.json();
-
-            const country = data.address.country;
-            const city = data.address.city || data.address.town || data.address.village || data.address.hamlet;
-
-            return { country, city };
-        } catch (error) {
-            console.error("Error getting country and city:", error);
-            return { country: null, city: null };
-        }
-    }
-
     async function getHolidays() {
         try {
-            navigator.geolocation.getCurrentPosition(async (position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-
-                // Определить страну и город
-                const { country, city } = await getCountryAndCity(latitude, longitude);
-
-                // Получить данные о праздниках с использованием полученных данных
-                const response = await CalendarService.getHolidays(currentYear, country, city);
+            const response = await HolidaysFunc.getHolidays(currentYear);
+            if (response) {
                 setHolidays(response);
                 setLoading(false);
-            }, (error) => {
-                // Обработать ошибку получения местоположения
-                setError(new Error("Failed to get location: " + error.message));
-                setLoading(false);
-            });
+            }
         } catch (error) {
-            setError(error);
+            console.error("Error getting holidays:", error);
             setLoading(false);
         }
     }

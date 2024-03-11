@@ -1,6 +1,5 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import AuthService from '../services/AuthService';
-import Router from 'next/router';
 
 class UserStore {
     user = {
@@ -10,6 +9,8 @@ class UserStore {
         bio: '',
     };
     isLoading = true;
+    currentYear = (new Date()).getFullYear();
+    
 
     constructor(user) {
         makeAutoObservable(this);
@@ -40,6 +41,7 @@ class UserStore {
                 this.setUser(response.data.user);
                 this.setIsLoading(false);
                 localStorage.setItem('accesstoken', response.data.accessToken);
+                
             });
         } catch (e) {
             if (e.response.status === 401) {
@@ -53,6 +55,7 @@ class UserStore {
         try {
             const response = await AuthService.login(email, password);
             this.setUser(response.data.user);
+            HolidaysData.getHolidays
             this.setIsLoading(false);
             localStorage.setItem('accesstoken', response.data.accessToken);
 

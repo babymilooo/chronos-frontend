@@ -6,7 +6,7 @@ const userPage = () => {
     const router = useRouter();
     const [user, setUser] = useState({});
     const [isFriend, setIsFriend] = useState(false);
-
+    const [loading, setIsLoading] = useState(true);
     async function getUser(id) {
         try {
             const response = await UserService.getUser(id);
@@ -32,7 +32,8 @@ const userPage = () => {
             getUser(id);
             checkIsFriend(id);
         }
-
+        setIsLoading(false);
+        
     }, [router.query]);
 
     const handeClick = async () => {
@@ -43,9 +44,13 @@ const userPage = () => {
         }
     }
 
+    if (loading) {
+        return <div>Loading...</div>
+    }
+
     return (
         <div>
-            {user && (
+            {loading ? <div>Loading...</div> :
                 <>
                     <h1>{user.username}</h1>
                     {isFriend ? <p>is friend</p> :
@@ -55,7 +60,7 @@ const userPage = () => {
                         >add to friend</button>}
 
                 </>
-            )}
+            }
 
         </div>
     );

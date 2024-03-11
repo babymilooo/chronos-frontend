@@ -26,7 +26,7 @@ export default class CalendarService {
         }
     }
 
-    static async createEvent(title, date, startTime, endTime, user, coOwners = [], attendees = []) {
+    static async createEvent(title, date, startTime, endTime, coOwners = [], attendees = [], user) {
         try {
             await $api.post(`${API_URL}/events`, { title, date, startTime, endTime, user, coOwners, attendees });
             return true;
