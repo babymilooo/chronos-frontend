@@ -5,13 +5,13 @@ import { observer } from 'mobx-react-lite';
 import { UserContext } from "@/app/Contexts/Contexts";
 
 const index = () => {
-    const { userStore } = useContext(UserContext);
+    const { userStore } = useContext(Context);
 
     useEffect(() => {
         if (!userStore.isLoading) {
             Router.push('/calendar');
         }
-        
+
     }, [userStore.isLoading]);
 
     return null;

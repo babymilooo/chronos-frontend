@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { Context } from './_app';
 import { observer } from 'mobx-react-lite';
-import GetHolidays from '@/app/components/GetHolidays';
-import GetEvents from '@/app/components/GetEvents';
 import Router from 'next/router';
 import HolidaysFunc from '@/app/utils/holidays-utils';
 import CalendarService from '@/app/services/CalendarService';

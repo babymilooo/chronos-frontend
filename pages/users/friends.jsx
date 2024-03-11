@@ -7,7 +7,7 @@ import { UserContext } from "@/app/Contexts/Contexts";
 
 const friends = () => {
 
-    const { userStore } = useContext(UserContext);
+    const { userStore } = useContext(Context);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
