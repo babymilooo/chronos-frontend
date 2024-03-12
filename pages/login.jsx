@@ -3,11 +3,13 @@ import { Context } from "./_app";
 import Router from "next/router";
 import Link from "next/link";
 import { observer } from "mobx-react-lite";
+import { RootStoreContext } from "@/app/provider/rootStoreProvider";
 
 const login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { userStore } = useContext(Context);
+    const rootStore = useContext(RootStoreContext);
+    const { userStore } = rootStore;
 
     useEffect(() => {
         if (!userStore.isLoading) {

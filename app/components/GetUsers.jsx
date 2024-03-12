@@ -3,10 +3,12 @@ import UserService from "../services/UserService";
 import Router from "next/router";
 import { Context } from "@/pages/_app";
 import { observer } from 'mobx-react-lite';
+import { RootStoreContext } from "../provider/rootStoreProvider";
 
 const GetUsers = () => {
 
-    const { userStore } = useContext(Context);
+    const rootStore = useContext(RootStoreContext);
+    const { userStore } = rootStore;
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -27,7 +29,7 @@ const GetUsers = () => {
             getUsers();
         }
     }, [userStore.user]);
-    
+
     return (
         <div>
             {loading ? <div>Loading...</div> :

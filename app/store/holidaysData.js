@@ -5,24 +5,39 @@ class HolidaysStore {
 
     holidays = [];
     isLoading = true;
-    constructor(holidays) {
+    constructor(rootStore) {
+        this.rootStore = rootStore;
         makeAutoObservable(this);
-        this.holidays = holidays || this.holidays;
+    }
+
+    setHolidays(data) {
+        this.holidays = data; // Установите данные о праздниках в holidays
+    }
+
+    addItem(item) {
+        this.holidays.push(item);
+    }
+
+    // Метод для удаления элемента из массива
+    removeItem(index) {
+        this.holidays.splice(index, 1);
     }
 
     async getHolidays(currentYear) {
         try {
+            console.log("getHolidays");
             const response = await HolidaysFunc.getHolidays(currentYear);
+            console.log(response);
             runInAction(() => {
-                this.holidays = response;
+                this.setHolidays(response); // Установите данные о праздниках
+                console.log(this.holidays);
                 this.isLoading = false;
             });
         } catch (error) {
             console.error("Error getting holidays:", error);
-            setLoading(false);
+            this.isLoading = false;
         }
     }
 }
 
-const holidaysStore = new HolidaysStore();
-export default holidaysStore;
+export default HolidaysStore;

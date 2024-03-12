@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import { Context } from './_app';
 import GetUsers from '@/app/components/GetUsers';
+import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 
 const users = () => {
-    const userStore = useContext(Context);
+    const rootStore = useContext(RootStoreContext);
+    const { userStore } = rootStore;
 
     return (
         <div>

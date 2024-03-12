@@ -1,8 +1,27 @@
 import CalendarService from './../services/CalendarService';
 class HolidaysFunc {
 
+    static async getLatLongFromIP(ipAddress) {
+        let apiUrl = `http://ip-api.com/json/${ipAddress}?fields=status,country,countryCode,lat,lon,timezone`;
+
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                return { latitude: data.lat, longitude: data.lon, country: data.country, countryCode: data.countryCode, timezone: data.timezone };
+            } else {
+                throw new Error('Failed to fetch IP geolocation data.');
+            }
+        } catch (error) {
+            console.error('Error fetching IP geolocation data:', error);
+            throw error;
+        }
+    }
+
     static async getCountryAndCity(latitude, longitude) {
         try {
+            console.log('getCountryAndCity', latitude, longitude);
             const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=en`);
             const data = await response.json();
 
@@ -17,26 +36,31 @@ class HolidaysFunc {
     }
 
     static async getHolidays(currentYear) {
-        return new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(async (position) => {
-                try {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
+        try {
+            // Fetch IP-based geolocation data using Apify
+            const response = await fetch('https://api.apify.com/v2/browser-info');
+            const data = await response.json();
 
-                    // Определить страну и город
-                    const { country, city } = await this.getCountryAndCity(latitude, longitude);
+            const clientIp = data.clientIp;
 
-                    // Получить данные о праздниках с использованием полученных данных
-                    const response = await CalendarService.getHolidays(currentYear, country, city);
-                    resolve(response);
-                } catch (error) {
-                    reject(error);
-                }
-            }, (error) => {
-                // Обработать ошибку получения местоположения
-                reject(new Error("Failed to get location: " + error.message));
-            });
-        });
+            // Get latitude and longitude using IP-based geolocation data
+            const { latitude, longitude, country, countryCode, timezone } = await this.getLatLongFromIP(clientIp);
+
+            const locationData = {
+                latitude,
+                longitude,
+                country,
+                countryCode,
+                timezone
+            };
+
+            // Get holiday data using geolocation information
+            const holidaysResponse = await CalendarService.getHolidays(currentYear, country, 'major_holiday');
+            return holidaysResponse;
+        } catch (error) {
+            console.error("Error getting holidays:", error);
+            throw error;
+        }
     }
 }
 

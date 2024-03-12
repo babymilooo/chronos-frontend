@@ -3,9 +3,9 @@ import { API_URL } from '../https/axios';
 
 export default class CalendarService {
 
-    static async getHolidays(year, country, city) {
+    static async getHolidays(year, country, type) {
         try {
-            const response = await $api.get(`${API_URL}/holidays`, { params: { country, city, year } });
+            const response = await $api.get(`${API_URL}/holidays`, { params: { country, year, type } });
             return response.data;
         } catch (error) {
             console.error("Error getting holidays:", error);

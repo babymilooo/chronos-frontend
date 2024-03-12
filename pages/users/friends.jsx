@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import { Context } from "../_app";
 import UserService from "@/app/services/UserService";
 import { observer } from "mobx-react-lite";
 import Router from "next/router";
-import { UserContext } from "@/app/Contexts/Contexts";
+import { RootStoreContext } from "@/app/provider/rootStoreProvider";
 
 const friends = () => {
 
-    const { userStore } = useContext(Context);
+    const rootStore = useContext(RootStoreContext);
+    const { userStore } = rootStore;
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 

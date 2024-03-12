@@ -2,9 +2,11 @@ import { useContext } from "react";
 import { Context } from "../_app";
 import CreateNewEvent from "../../app/components/createNewEvent";
 import { observer } from 'mobx-react-lite';
+import { RootStoreContext } from "@/app/provider/rootStoreProvider";
 
 const createNewEvent = () => {
-    const { userStore } = useContext(Context);
+    const rootStore = useContext(RootStoreContext);
+    const { userStore } = rootStore;
 
     return (
         <div>

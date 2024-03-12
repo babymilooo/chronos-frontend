@@ -1,15 +1,13 @@
-import userStore from '@/app/store/userData';
 import '../app/styles/globals.css'
-import { createContext } from 'react';
 import RootLayout from '@/app/layouts/layout';
+import RootStoreProvider from '@/app/provider/rootStoreProvider';
 
-export const Context = createContext({ userStore });
 export default function App({ Component, pageProps }) {
     return (
-        <RootLayout>
-            <Context.Provider value={{ userStore }}>
+        <RootStoreProvider>
+            <RootLayout>
                 <Component {...pageProps} />
-            </Context.Provider>
-        </RootLayout>
+            </RootLayout>
+        </RootStoreProvider>
     );
 }

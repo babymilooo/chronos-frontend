@@ -1,6 +1,8 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import AuthService from '../services/AuthService';
 import Router from 'next/router';
+import { holidaysStore } from '@/app/store/holidaysData';
+import getHolidays from './../components/GetHolidays';
 
 class UserStore {
     user = {
@@ -11,9 +13,10 @@ class UserStore {
     };
     isLoading = true;
     currentYear = (new Date()).getFullYear();
-    
 
-    constructor(user) {
+
+    constructor(user, rootStore) {
+        this.rootStore = rootStore;
         makeAutoObservable(this);
         this.user = user || this.user;
     }
@@ -45,7 +48,7 @@ class UserStore {
 
             });
         } catch (e) {
-            if (e.response.status === 401) {
+            if (e?.response?.status === 401) { // Use optional chaining to access properties
                 await Router.push('/login');
             }
             console.error(e.response?.data?.message);
@@ -89,5 +92,4 @@ class UserStore {
     }
 }
 
-const userStore = new UserStore();
-export default userStore;
+export default UserStore;

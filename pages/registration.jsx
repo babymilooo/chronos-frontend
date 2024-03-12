@@ -1,11 +1,13 @@
 import { useContext, useState } from "react";
 import { Context } from "./_app";
 import Link from "next/link";
+import { RootStoreContext } from "@/app/provider/rootStoreProvider";
 
 const registration = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { userStore } = useContext(Context);
+    const rootStore = useContext(RootStoreContext);
+    const { userStore } = rootStore;
 
     return (
         <div>

@@ -1,12 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
-import { Context } from './_app';
 import { observer } from 'mobx-react-lite';
 import Router from 'next/router';
 import HolidaysFunc from '@/app/utils/holidays-utils';
 import CalendarService from '@/app/services/CalendarService';
+import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 
 const calendar = () => {
-    const { userStore } = useContext(Context);
+    const rootStore = useContext(RootStoreContext);
+    const { userStore, holidaysStore } = rootStore;
     const [currentYear, setCurrentYear] = useState((new Date()).getFullYear());
     const [currentMonth, setCurrentMonth] = useState((new Date()).getMonth() + 1); // Month is zero-based, so add 1
     const [loading, setLoading] = useState(true);
@@ -52,7 +53,8 @@ const calendar = () => {
             try {
                 // Only fetch data if isLoading is false and calendar is empty
                 if (!userStore.isLoading && calendar.length === 0) {
-                    const holidaysData = await getHolidays();
+                    const holidaysData = holidaysStore.holidays.map(holiday => ({ ...holiday }));
+
                     const eventsData = await getEvents(userStore.user.id);
                     // Merge events and holidays into one array
                     const eventsDataWithDateTime = eventsData.map(event => {
@@ -74,7 +76,6 @@ const calendar = () => {
                         };
                     });
 
-                    console.log('eventsDataWithDateTime', eventsDataWithDateTime);
                     // Merge events and holidays into one array
                     const mergedCalendar = [...holidaysData, ...eventsDataWithDateTime];
 

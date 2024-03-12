@@ -1,11 +1,11 @@
-import { Context } from "./_app";
 import { useContext, useEffect } from "react";
 import Router from "next/router";
 import { observer } from 'mobx-react-lite';
-import { UserContext } from "@/app/Contexts/Contexts";
+import { RootStoreContext } from "@/app/provider/rootStoreProvider";
 
 const index = () => {
-    const { userStore } = useContext(Context);
+    const rootStore = useContext(RootStoreContext);
+    const { userStore } = rootStore;
 
     useEffect(() => {
         if (!userStore.isLoading) {
