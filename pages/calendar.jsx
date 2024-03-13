@@ -4,6 +4,8 @@ import Router from 'next/router';
 import HolidaysFunc from '@/app/utils/holidays-utils';
 import CalendarService from '@/app/services/CalendarService';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
+import EventsUtils from './../app/utils/events-utils';
+import CalendarUtils from './../app/utils/calendar-utils';
 
 const calendar = () => {
     const rootStore = useContext(RootStoreContext);
@@ -13,27 +15,6 @@ const calendar = () => {
     const [loading, setLoading] = useState(true);
     const [calendar, setCalendar] = useState([]);
     const [events, setEvents] = useState([]);
-
-    const getDaysInMonth = (year, month) => {
-        return new Date(year, month, 0).getDate();
-    };
-    const getFirstDayOfMonth = (year, month) => {
-        return new Date(year, month - 1, 1).getDay(); // Month is zero-based, so subtract 1
-    };
-
-    async function getHolidays() {
-        try {
-            const response = await HolidaysFunc.getHolidays(currentYear);
-            if (response) {
-                return response; // Return the response if it's valid
-            } else {
-                return []; // Return an empty array if response is falsy
-            }
-        } catch (error) {
-            console.error("Error getting holidays:", error);
-            setLoading(false);
-        }
-    }
 
     async function getEvents(id) {
         try {
@@ -48,6 +29,7 @@ const calendar = () => {
             setLoading(false);
         }
     }
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -56,44 +38,15 @@ const calendar = () => {
                     const holidaysData = holidaysStore.holidays.map(holiday => ({ ...holiday }));
 
                     const eventsData = await getEvents(userStore.user.id);
+
                     // Merge events and holidays into one array
-                    const eventsDataWithDateTime = eventsData.map(event => {
-                        const startTime = new Date(event.startTime);
-                        const date = startTime.toLocaleDateString();
-                        const [day, month, year] = date.split('.');
-
-                        // Create a new Date object with the provided day, month, and year
-                        const dateObject = new Date(`${year}-${month}-${day}`);
-
-                        // Format the date to "YYYY-MM-DD"
-                        const formattedDate = dateObject.toISOString().split('T')[0];
-
-                        return {
-                            ...event,
-                            date: formattedDate,
-                            time: startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                            name: event.title
-                        };
-                    });
+                    const eventsDataWithDateTime = await EventsUtils.eventsDataWithDateTime(eventsData);
 
                     // Merge events and holidays into one array
                     const mergedCalendar = [...holidaysData, ...eventsDataWithDateTime];
 
-                    const daysInMonth = getDaysInMonth(currentYear, currentMonth);
-                    const firstDayOfWeek = getFirstDayOfMonth(currentYear, currentMonth);
-                    const calendarGrid = Array.from({ length: daysInMonth }, (_, index) => {
-                        const day = index + 1;
-                        const data = mergedCalendar.find(item => {
-                            const date = new Date(item.date);
-                            return date.getDate() === day && date.getMonth() + 1 === currentMonth;
-                        }); // Get data for this day from mergedCalendar
-                        return { day, data };
-                    });
-
-                    // Add empty cells for days before the first day of the month
-                    for (let i = 0; i < firstDayOfWeek; i++) {
-                        calendarGrid.unshift({ day: '', data: null });
-                    }
+                    // Get the calendar grid
+                    const calendarGrid = CalendarUtils.getCalendarGrid(currentYear, currentMonth, mergedCalendar);
 
                     setCalendar(calendarGrid);
                     setLoading(false);
@@ -105,6 +58,19 @@ const calendar = () => {
         }
         fetchData();
     }, [userStore.isLoading]);
+
+
+    const handleClick = () => {
+        const year = '2025';
+        const country = 'Ukraine';
+        const type = 'major_holidays';
+
+        // Dynamically generate the URL with parameters
+        Router.push({
+            pathname: `/calendar/${year}`,
+            query: { country, type }
+        });
+    };
 
     if (loading) {
         return <div>Loading...</div>;
@@ -135,15 +101,10 @@ const calendar = () => {
                 ))}
             </div>
 
-            {/* <ul>
-                {calendar.map((item, index) => (
-                    <li key={index}>{item.name} - {item.date}</li>
-                    // Adjust rendering according to your data structure
-                ))}
-            </ul> */}
             <button onClick={() => { Router.push('/calendar/createNewEvent') }} className="border-2 border-black">create new</button>
             <button onClick={() => { Router.push('/users') }} className="border-2 border-black">users</button>
             <button onClick={() => { Router.push('/users/friends') }} className="border-2 border-black">friends</button>
+            <button onClick={handleClick}>Navigate to My Page</button>
         </div >
     );
 };

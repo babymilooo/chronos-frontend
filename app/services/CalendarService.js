@@ -35,4 +35,17 @@ export default class CalendarService {
             return false;
         }
     }
+
+    static async getEventsAndHolidays(year, country, type, id) {
+        try {
+            console.log('getEventsAndHolidays');
+            console.log(year, country, type, id)
+            const holidays = await this.getHolidays(year, country, type);
+            const events = await this.getEvents(year, id);
+            return { holidays, events };
+        } catch (error) {
+            console.error('Произошла ошибка при получении данных о календарях и праздниках:', error);
+            return { holidays: [], events: [] };
+        }
+    }
 }

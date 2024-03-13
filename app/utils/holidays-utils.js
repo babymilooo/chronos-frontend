@@ -19,22 +19,6 @@ class HolidaysFunc {
         }
     }
 
-    static async getCountryAndCity(latitude, longitude) {
-        try {
-            console.log('getCountryAndCity', latitude, longitude);
-            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=en`);
-            const data = await response.json();
-
-            const country = data.address.country;
-            const city = data.address.city || data.address.town || data.address.village || data.address.hamlet;
-
-            return { country, city };
-        } catch (error) {
-            console.error("Error getting country and city:", error);
-            return { country: null, city: null };
-        }
-    }
-
     static async getHolidays(currentYear) {
         try {
             // Fetch IP-based geolocation data using Apify
