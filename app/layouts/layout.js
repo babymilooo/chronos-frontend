@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
 import { observer } from 'mobx-react-lite';
 import { RootStoreContext } from "../provider/rootStoreProvider";
+import MyNavbar from './../components/Navbar';
 
 const RootLayout = ({ children }) => {
     const rootStore = useContext(RootStoreContext);
@@ -26,7 +27,8 @@ const RootLayout = ({ children }) => {
                 <link rel="icon" href="../favicon.ico" />
                 <meta name="description" content="Next.js App" />
             </Head>
-            <div>
+            <div className="bg-bkg text-content">
+                {!userStore.isLoading && <MyNavbar />}
                 {isDataReady ? children : null}
             </div>
         </>

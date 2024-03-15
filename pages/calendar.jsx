@@ -6,6 +6,8 @@ import CalendarService from '@/app/services/CalendarService';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 import EventsUtils from './../app/utils/events-utils';
 import CalendarUtils from './../app/utils/calendar-utils';
+import { Button } from '@nextui-org/react';
+import MyNavbar from '@/app/components/Navbar';
 
 const calendar = () => {
     const rootStore = useContext(RootStoreContext);
@@ -77,7 +79,7 @@ const calendar = () => {
     }
 
     return (
-        <div>
+        <div className="bg-bkg text-content">
             <div className="grid grid-cols-7 gap-4">
                 {/* Calendar header */}
                 <div className="col-span-7 flex justify-center py-4 bg-gray-200">
@@ -105,6 +107,7 @@ const calendar = () => {
             <button onClick={() => { Router.push('/users') }} className="border-2 border-black">users</button>
             <button onClick={() => { Router.push('/users/friends') }} className="border-2 border-black">friends</button>
             <button onClick={handleClick}>Navigate to My Page</button>
+            <Button onClick={() => { Router.push('/calendar/createNewEvent') }}>Create New</Button>
         </div >
     );
 };

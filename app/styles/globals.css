@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    @apply bg-bkg;
+    @apply text-content;
+}
+
+@layer base {
+    :root {
+        --color-bkg: 253 253 253;
+        --color-content: 0 0 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --color-bkg: 18 18 18;
+            --color-content: 253 253 253;
+            body {
+                @apply bg-dark-mode
+            }
+        }
+    }
+
+    :root[data-theme='dark'] {
+        --color-bkg: 18 18 18;
+        --color-content: 253 253 253;
+        body {
+            @apply bg-dark-mode
+        }
+    }
+
+    :root[data-theme='light'] {
+        --color-bkg: 253 253 253;
+        --color-content: 0 0 0;
+    }
+}
