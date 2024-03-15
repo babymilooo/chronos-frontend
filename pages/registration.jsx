@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
-import { Context } from "./_app";
 import Link from "next/link";
 import { RootStoreContext } from "@/app/provider/rootStoreProvider";
 import { Button, Image, Input } from "@nextui-org/react";
 import { EyeSlashFilledIcon } from "@/app/components/images/EyeSlashFilledIcon";
 import { EyeFilledIcon } from "@/app/components/images/EyeFilledIcon";
+import Router from "next/router";
 
 const registration = () => {
     const [email, setEmail] = useState('');
@@ -15,12 +15,11 @@ const registration = () => {
 
     const toggleVisibility = () => setIsVisible(!isVisible);
     const handleRegistration = async () => {
-        const result = await userStore.registration(email, password); // Ваша функция регистрации
+        Router.push('/activateAccount');
+        const result = await userStore.registration(email, password);
         if (result) {
-            // Если регистрация успешна, перенаправляем на целевую страницу
-            Router.push('/calendar'); // Укажите здесь путь к странице, на которую нужно перенаправить пользователя
+            localStorage.setItem('emailForActivation', email);
         } else {
-            // Обработка случая, когда регистрация неуспешна
             console.error('Ошибка регистрации');
         }
     }
@@ -69,7 +68,7 @@ const registration = () => {
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                     />
-                    <Button color="default" variant="bordered" onClick={handleRegistration} className="mt-4">
+                    <Button color="default" variant="bordered" onClick={handleRegistration} className="mt-4 hover:border-content">
                         Sign Up
                     </Button>
                     <p className="mt-3"> Already have an account?
@@ -77,6 +76,7 @@ const registration = () => {
                             Login
                         </Link>
                     </p>
+                    <Link href="/activateAccount">asdasd</Link>
                 </div>
             </div>
         </div>

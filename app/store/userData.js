@@ -74,6 +74,8 @@ class UserStore {
             const response = await AuthService.register(email, password);
             this.setUser(response.data.user);
             localStorage.setItem('accesstoken', response.data.accessToken);
+
+            return true;
         }
         catch (e) {
             console.error(e.response?.data?.message);

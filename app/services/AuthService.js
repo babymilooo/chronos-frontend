@@ -41,4 +41,16 @@ export default class AuthService {
             console.error(e.response?.data?.message);
         }
     }
+
+    static async activateAccount(email, activationPassword) {
+        try {
+            const response = await $api.post(`${API_URL}/auth/activate`, { email, activationPassword });
+            localStorage.clear('emailForActivation');
+            console.log(response);
+            return response;
+        } catch (e) {
+            console.error(e.response?.data?.message);
+            return e;
+        }
+    }
 }

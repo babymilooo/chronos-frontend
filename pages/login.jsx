@@ -7,6 +7,7 @@ import { RootStoreContext } from "@/app/provider/rootStoreProvider";
 import { Button, Image, Input } from "@nextui-org/react";
 import { EyeSlashFilledIcon } from "@/app/components/images/EyeSlashFilledIcon";
 import { EyeFilledIcon } from "@/app/components/images/EyeFilledIcon";
+import { InputOTPPattern } from "@/app/components/input-OTP/MyInputOTP";
 
 const login = () => {
     const [email, setEmail] = useState('');
@@ -34,6 +35,7 @@ const login = () => {
             console.error('Ошибка входа');
         }
     };
+
     return (
         <div className="bg-gradient-to-r from-rose-500 to-purple-900 h-screen flex items-end">
             <div className="w-1/3 h-3/4 bg-bkg text-content rounded-t-[45px] mt-auto ml-15p">
@@ -68,9 +70,9 @@ const login = () => {
                         endContent={
                             <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
                                 {isVisible ? (
-                                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                                ) : (
                                     <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                ) : (
+                                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                                 )}
                             </button>
                         }
@@ -79,7 +81,7 @@ const login = () => {
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                     />
-                    <Button color="default" variant="bordered" onClick={handleLogin} className="mt-4">
+                    <Button color="default" variant="bordered" onClick={handleLogin} className="mt-4 hover:border-content">
                         Login
                     </Button>
                     <p className="mt-3"> Don't have an account?
