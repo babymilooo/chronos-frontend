@@ -1,9 +1,7 @@
-import { Context } from "@/pages/_app";
 import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
 import { observer } from 'mobx-react-lite';
 import { RootStoreContext } from "../provider/rootStoreProvider";
-import MyNavbar from './../components/Navbar';
 
 const RootLayout = ({ children }) => {
     const rootStore = useContext(RootStoreContext);
@@ -13,9 +11,12 @@ const RootLayout = ({ children }) => {
     useEffect(() => {
         const checkAuthentication = async () => {
             await userStore.checkAuth();
-            await holidaysStore.getHolidays(userStore.currentYear);
-            console.log("data ready");
-            setIsDataReady(true);
+            if (!userStore.isLoading) {
+                await holidaysStore.getHolidays(userStore.currentYear);
+                console.log("data ready");
+                setIsDataReady(true);
+            }
+            return;
         };
         checkAuthentication();
     }, [userStore, holidaysStore]);
@@ -28,8 +29,7 @@ const RootLayout = ({ children }) => {
                 <meta name="description" content="Next.js App" />
             </Head>
             <div className="bg-bkg text-content">
-                {isDataReady && !userStore.isLoading ? <MyNavbar /> : null}
-                {isDataReady ? children : null}
+                {isDataReady ? children : <div>Loading...</div>}
             </div>
         </>
     )

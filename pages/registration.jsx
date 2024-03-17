@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { RootStoreContext } from "@/app/provider/rootStoreProvider";
 import { Button, Image, Input } from "@nextui-org/react";
@@ -12,17 +12,33 @@ const registration = () => {
     const rootStore = useContext(RootStoreContext);
     const { userStore } = rootStore;
     const [isVisible, setIsVisible] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(true);
     const toggleVisibility = () => setIsVisible(!isVisible);
+
+    useEffect(() => {
+        if (!userStore.isLoading) {
+            Router.push('/calendar');
+        }
+        else {
+            setIsLoading(false);
+        }
+    }
+        , [userStore.isLoading]);
+
     const handleRegistration = async () => {
-        Router.push('/activateAccount');
         const result = await userStore.registration(email, password);
         if (result) {
             localStorage.setItem('emailForActivation', email);
+            Router.push('/activateAccount');
         } else {
             console.error('Ошибка регистрации');
         }
     }
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+
     return (
         <div className="bg-gradient-to-r from-rose-500 to-purple-900 h-screen flex items-end">
             <div className="w-1/3 h-3/4 bg-bkg text-content rounded-t-[45px] mt-auto ml-15p">

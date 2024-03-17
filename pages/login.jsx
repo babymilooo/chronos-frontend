@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { Context } from "./_app";
 import Router from "next/router";
 import Link from "next/link";
 import { observer } from "mobx-react-lite";
@@ -7,7 +6,6 @@ import { RootStoreContext } from "@/app/provider/rootStoreProvider";
 import { Button, Image, Input } from "@nextui-org/react";
 import { EyeSlashFilledIcon } from "@/app/components/images/EyeSlashFilledIcon";
 import { EyeFilledIcon } from "@/app/components/images/EyeFilledIcon";
-import { InputOTPPattern } from "@/app/components/input-OTP/MyInputOTP";
 
 const login = () => {
     const [email, setEmail] = useState('');
@@ -15,12 +13,16 @@ const login = () => {
     const rootStore = useContext(RootStoreContext);
     const { userStore } = rootStore;
     const [isVisible, setIsVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const toggleVisibility = () => setIsVisible(!isVisible);
 
     useEffect(() => {
         if (!userStore.isLoading) {
             Router.push('/calendar');
+        }
+        else {
+            setIsLoading(false);
         }
     }
         , [userStore.isLoading]);
@@ -35,6 +37,10 @@ const login = () => {
             console.error('Ошибка входа');
         }
     };
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
 
     return (
         <div className="bg-gradient-to-r from-rose-500 to-purple-900 h-screen flex items-end">
@@ -51,42 +57,44 @@ const login = () => {
                 </div>
                 <p className="flex items-center justify-center text-4xl font-bold mt-10">Login</p>
                 <div className="flex flex-col items-center justify-center h-auto mt-10">
-                    <Input
-                        isClearable
-                        type="email"
-                        label="Email"
-                        variant="bordered"
-                        placeholder="Enter your email"
-                        defaultValue="junior@nextui.org"
-                        onClear={() => console.log("input cleared")}
-                        className="max-w-xs"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                    />
-                    <Input
-                        label="Password"
-                        variant="bordered"
-                        placeholder="Enter your password"
-                        endContent={
-                            <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                                {isVisible ? (
-                                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                                ) : (
-                                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                                )}
-                            </button>
-                        }
-                        type={isVisible ? "text" : "password"}
-                        className="max-w-xs mt-4"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                    />
-                    <Button color="default" variant="bordered" onClick={handleLogin} className="mt-4 hover:border-content">
-                        Login
-                    </Button>
-                    <p className="mt-3"> Don't have an account?
-                        <Link href="/registration" className=" hover:underline font-bold ml-1">Sign Up</Link>
-                    </p>
+                    <div className="w-1/2 flex flex-col items-center">
+                        <Input
+                            isClearable
+                            type="email"
+                            label="Email"
+                            variant="bordered"
+                            placeholder="Enter your email"
+                            defaultValue="junior@nextui.org"
+                            onClear={() => console.log("input cleared")}
+                            className="w-full"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                        />
+                        <Input
+                            label="Password"
+                            variant="bordered"
+                            placeholder="Enter your password"
+                            endContent={
+                                <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                                    {isVisible ? (
+                                        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                    ) : (
+                                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                    )}
+                                </button>
+                            }
+                            type={isVisible ? "text" : "password"}
+                            className="w-full mt-4"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                        />
+                        <Button color="default" variant="bordered" onClick={handleLogin} className="w-full mt-4 hover:border-content px-4 py-2">
+                            Login
+                        </Button>
+                        <p className="mt-3"> Don't have an account?
+                            <Link href="/registration" className=" hover:underline font-bold ml-1">Sign Up</Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

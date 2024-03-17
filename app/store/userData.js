@@ -86,6 +86,7 @@ class UserStore {
             await AuthService.logout();
             this.setUser({ username: null, id: null, image: null, bio: null, isLoading: false });
             localStorage.clear('accesstoken');
+            await Router.push('/login');
         }
         catch (e) {
             console.error(e.response?.data?.message);

@@ -3,6 +3,7 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Dropdown,
 import ThemeSwitcher from './ThemeSwitcher';
 import { RootStoreContext } from '../provider/rootStoreProvider';
 import Router from 'next/router';
+import AuthService from '../services/AuthService';
 
 const MyNavbar = () => {
     const rootStore = useContext(RootStoreContext);
@@ -10,6 +11,10 @@ const MyNavbar = () => {
 
     if (userStore.isLoading) {
         return <div>Loading...</div>;
+    }
+
+    const handleLogout = async () => {
+        await userStore.logout();
     }
 
     return (
@@ -31,22 +36,23 @@ const MyNavbar = () => {
                     <DropdownTrigger>
                         <Avatar
                             as="button"
-                            className="transition-transform"
+                            className=""
                             color="secondary"
-                            name="Jason Hughes"
                             size="sm"
                             src={userStore.user.image}
                         />
                     </DropdownTrigger>
                     <DropdownMenu aria-label="Profile Actions" variant="flat">
-                        {/* <DropdownItem key="profile" className="h-14 gap-2">
-                            <p className="font-semibold text-lg">{userStore.user.username}</p>
-                            <p className="font-semibold text-neutral-600">{userStore.user.email}</p>
-                        </DropdownItem> */}
+                        <DropdownItem key="username" className="bg-neutral-100">
+                            <div>
+                                <p className="font-bold text-lg">{userStore.user.username}</p>
+                                <p className="text-neutral-500">{userStore.user.email}</p>
+                            </div>
+                        </DropdownItem>
                         <DropdownItem key="settings">My Settings</DropdownItem>
                         <DropdownItem key="team_settings" onClick={() => { Router.push('/users/friends') }}>Friends</DropdownItem>
                         <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-                        <DropdownItem key="logout" color="danger">
+                        <DropdownItem key="logout" color="danger" onClick={handleLogout}>
                             Log Out
                         </DropdownItem>
                     </DropdownMenu>
