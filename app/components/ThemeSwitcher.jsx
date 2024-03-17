@@ -20,9 +20,9 @@ const ThemeSwitcher = () => {
     return (
         <div>
             <Switch
-                checked={isLightTheme}
                 size="lg"
                 color="default"
+                isSelected={isLightTheme}
                 thumbIcon={({ isSelected, className }) =>
                     isSelected ? (
                         <SunIcon className={className} />
@@ -30,7 +30,7 @@ const ThemeSwitcher = () => {
                         <MoonIcon className={className} />
                     )
                 }
-                onChange={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
+                onChange={() => setTheme(isLightTheme ? "dark" : "light")}
             >
             </Switch>
         </div>
