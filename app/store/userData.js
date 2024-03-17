@@ -1,15 +1,14 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import AuthService from '../services/AuthService';
 import Router from 'next/router';
-import { holidaysStore } from '@/app/store/holidaysData';
-import getHolidays from './../components/GetHolidays';
 
 class UserStore {
     user = {
-        username: '',
-        id: '',
-        image: '',
-        bio: '',
+        username: null,
+        id: null,
+        image: null,
+        bio: null,
+        email: null,
     };
     isLoading = true;
     currentYear = (new Date()).getFullYear();
@@ -85,7 +84,7 @@ class UserStore {
     async logout() {
         try {
             await AuthService.logout();
-            this.setUser({ username: '', id: '', image: '', bio: '', isLoading: false });
+            this.setUser({ username: null, id: null, image: null, bio: null, isLoading: false });
             localStorage.clear('accesstoken');
         }
         catch (e) {

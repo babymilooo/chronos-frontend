@@ -53,4 +53,13 @@ export default class AuthService {
             return e;
         }
     }
+
+    static async sendActivationCode(email) {
+        try {
+            const response = await $api.post(`${API_URL}/auth/sendActivationCode`, { email });
+            return response;
+        } catch (e) {
+            console.error(e.response?.data?.message);
+        }
+    }
 }

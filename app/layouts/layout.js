@@ -28,7 +28,7 @@ const RootLayout = ({ children }) => {
                 <meta name="description" content="Next.js App" />
             </Head>
             <div className="bg-bkg text-content">
-                {!userStore.isLoading && <MyNavbar />}
+                {isDataReady && !userStore.isLoading ? <MyNavbar /> : null}
                 {isDataReady ? children : null}
             </div>
         </>
