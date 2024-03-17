@@ -14,10 +14,6 @@ module.exports = {
         bkg: 'rgb(var(--color-bkg) / <alpha-value>)',
         content: 'rgb(var(--color-content) / <alpha-value>)'
       },
-      backgroundImage: {
-        'dark-mode': "url('../../app/components/images/dark-mode.webp')",
-        'light-mode': "url('../../app/components/images/light-mode.webp')",
-      },
       margin: {
         '5p': '5%', // для 5% margin
         '10p': '10%', // для 10% margin

@@ -24,28 +24,24 @@ const calendar = () => {
     // Get the name of the current month using the currentMonth state
     const currentMonthName = monthNames[currentMonth];
 
-
     async function getEvents(id) {
         try {
             const response = await CalendarService.getEvents(currentYear, id);
-            if (response) {
-                return response; // Return the response if it's valid
-            } else {
-                return []; // Return an empty array if response is falsy
-            }
+            return response || []; // Return the response or an empty array if it's falsy
         } catch (error) {
             console.error("Error getting events:", error);
-            setLoading(false);
+            return []; // Return an empty array in case of an error
         }
     }
 
     useEffect(() => {
         async function fetchData() {
             try {
+                console.log("userStore.isLoading", userStore.isLoading);
                 // Only fetch data if isLoading is false and calendar is empty
                 if (!userStore.isLoading && calendar.length === 0) {
                     const holidaysData = holidaysStore.holidays.map(holiday => ({ ...holiday }));
-
+                    console.log("holidaysData", holidaysData);
                     const eventsData = await getEvents(userStore.user.id);
                     console.log("eventsData", eventsData);
                     // Merge events and holidays into one array
@@ -66,23 +62,26 @@ const calendar = () => {
                 setLoading(false);
             }
         }
-        fetchData();
+        if (userStore.user?.id) {
+            fetchData(); // Call fetchData if there is a user ID
+        }
     }, [userStore.isLoading]);
 
 
-    const handleClick = () => {
-        const year = '2025';
-        const country = 'Ukraine';
-        const type = 'major_holidays';
+    // const handleClick = () => {
+    //     const year = '2025';
+    //     const country = 'Ukraine';
+    //     const type = 'major_holidays';
 
-        // Dynamically generate the URL with parameters
-        Router.push({
-            pathname: `/calendar/${year}`,
-            query: { country, type }
-        });
-    };
+    //     // Dynamically generate the URL with parameters
+    //     Router.push({
+    //         pathname: `/calendar/${year}`,
+    //         query: { country, type }
+    //     });
+    // };
 
     if (loading) {
+        console.log("Loading...");
         return <div>Loading...</div>;
     }
 

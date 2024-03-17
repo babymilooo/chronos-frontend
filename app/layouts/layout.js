@@ -5,21 +5,33 @@ import { RootStoreContext } from "../provider/rootStoreProvider";
 
 const RootLayout = ({ children }) => {
     const rootStore = useContext(RootStoreContext);
-    const [isDataReady, setIsDataReady] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { userStore, holidaysStore } = rootStore;
 
     useEffect(() => {
         const checkAuthentication = async () => {
             await userStore.checkAuth();
             if (!userStore.isLoading) {
-                await holidaysStore.getHolidays(userStore.currentYear);
-                console.log("data ready");
-                setIsDataReady(true);
+                try {
+                    // Fetch holidays and wait for it to finish before setting loading to false
+                    await holidaysStore.getHolidays(userStore.currentYear);
+                    console.log("data ready");
+                } catch (error) {
+                    console.error("Failed to fetch holidays", error);
+                } finally {
+                    // Set loading to false regardless of success or error
+                    setLoading(false);
+                }
             }
             return;
         };
         checkAuthentication();
     }, [userStore, holidaysStore]);
+
+    if (loading) {
+        // Show a loading screen or a spinner while data is being fetched
+        return <div>Loading...</div>;
+    }
 
     return (
         <>
@@ -29,7 +41,7 @@ const RootLayout = ({ children }) => {
                 <meta name="description" content="Next.js App" />
             </Head>
             <div className="bg-bkg text-content">
-                {isDataReady ? children : <div>Loading...</div>}
+                {children}
             </div>
         </>
     )

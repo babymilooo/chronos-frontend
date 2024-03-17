@@ -44,7 +44,6 @@ class UserStore {
                 this.setUser(response.data.user);
                 this.setIsLoading(false);
                 localStorage.setItem('accesstoken', response.data.accessToken);
-
             });
         } catch (e) {
             if (e?.response?.status === 401) { // Use optional chaining to access properties
@@ -57,10 +56,11 @@ class UserStore {
     async login(email, password) {
         try {
             const response = await AuthService.login(email, password);
-            this.setUser(response.data.user);
-            this.setIsLoading(false);
-            localStorage.setItem('accesstoken', response.data.accessToken);
-
+            runInAction(() => {
+                this.setUser(response.data.user);
+                this.setIsLoading(false);
+                localStorage.setItem('accesstoken', response.data.accessToken);
+            });
             return true;
         }
         catch (e) {
@@ -84,9 +84,10 @@ class UserStore {
     async logout() {
         try {
             await AuthService.logout();
-            this.setUser({ username: null, id: null, image: null, bio: null, isLoading: false });
+            this.setUser({ username: null, id: null, image: null, bio: null });
             localStorage.clear('accesstoken');
-            await Router.push('/login');
+            Router.push('/login');
+            this.isLoading = true;
         }
         catch (e) {
             console.error(e.response?.data?.message);
