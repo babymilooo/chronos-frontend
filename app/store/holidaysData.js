@@ -38,6 +38,12 @@ class HolidaysStore {
             this.isLoading = false;
         }
     }
+
+    async clearHolidays() {
+        this.holidays = [];
+        this.isLoading = true;
+    }
+
 }
 
 export default HolidaysStore;

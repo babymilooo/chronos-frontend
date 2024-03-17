@@ -7,6 +7,7 @@ import EventsUtils from './../app/utils/events-utils';
 import CalendarUtils from './../app/utils/calendar-utils';
 import { Button, ButtonGroup } from '@nextui-org/react';
 import MyNavbar from '@/app/components/Navbar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/app/components/popover/popover';
 
 const calendar = () => {
     const rootStore = useContext(RootStoreContext);
@@ -37,9 +38,8 @@ const calendar = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                console.log("userStore.isLoading", userStore.isLoading);
                 // Only fetch data if isLoading is false and calendar is empty
-                if (!userStore.isLoading && calendar.length === 0) {
+                if (!holidaysStore.isLoading && calendar.length === 0) {
                     const holidaysData = holidaysStore.holidays.map(holiday => ({ ...holiday }));
                     console.log("holidaysData", holidaysData);
                     const eventsData = await getEvents(userStore.user.id);
@@ -62,10 +62,9 @@ const calendar = () => {
                 setLoading(false);
             }
         }
-        if (userStore.user?.id) {
-            fetchData(); // Call fetchData if there is a user ID
-        }
-    }, [userStore.isLoading]);
+        fetchData(); // Call fetchData if there is a user ID
+
+    }, [userStore.isLoading, holidaysStore.holidays]);
 
 
     // const handleClick = () => {
@@ -87,7 +86,6 @@ const calendar = () => {
 
     return (
         <div className="flex flex-col h-screen">
-            <MyNavbar />
 
             {/* The rest of the content will flex to take up the remaining space */}
             <div className="flex flex-grow overflow-hidden">
@@ -160,10 +158,25 @@ const calendar = () => {
                         <div className="grid grid-cols-7 gap-1 w-full flex-grow  min-h-[75vh]">
                             {/* Calendar cells */}
                             {calendar.map((item, index) => (
-                                <div key={index} className="flex justify-center items-center border-t-1 p-2">
-                                    {item.day && `${item.day}${item.data ? ` - ${item.data.name}` : ''}`} {/* Display day and data */}
-                                </div>
+                                <Popover key={index}>
+                                    <PopoverTrigger asChild>
+                                        <div className="flex border-t p-2 cursor-pointer w-full h-full">
+                                            <div className="text-small font-bold">
+                                                {`${item.day}${item.data ? ` - ${item.data.name}` : ''}`}
+                                            </div>
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="bg-bkg transition-opacity duration-300 ease-in-out"
+                                        data-state-open="popover-enter"
+                                        data-state-closed="popover-exit"
+                                    >
+                                        {/* Popover content here */}
+                                    </PopoverContent>
+
+                                </Popover>
                             ))}
+
                         </div>
                     </div>
                 </div>
@@ -174,3 +187,4 @@ const calendar = () => {
 };
 
 export default observer(calendar);
+

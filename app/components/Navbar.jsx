@@ -7,14 +7,11 @@ import AuthService from '../services/AuthService';
 
 const MyNavbar = () => {
     const rootStore = useContext(RootStoreContext);
-    const { userStore } = rootStore;
-
-    if (userStore.isLoading) {
-        return <div>Loading...</div>;
-    }
+    const { userStore, holidaysStore } = rootStore;
 
     const handleLogout = async () => {
         await userStore.logout();
+        await holidaysStore.clearHolidays();
     }
 
     return (

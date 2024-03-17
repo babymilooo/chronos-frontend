@@ -12,7 +12,7 @@ const login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const rootStore = useContext(RootStoreContext);
-    const { userStore } = rootStore;
+    const { userStore, holidaysStore } = rootStore;
     const [isVisible, setIsVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -20,11 +20,12 @@ const login = () => {
 
     useEffect(() => {
         if (!userStore.isLoading) {
+            holidaysStore.getHolidays(userStore.currentYear);
             Router.push('/calendar');
         } else {
             setIsLoading(false);
         }
-    } , [userStore.isLoading]);
+    }, [userStore.isLoading]);
 
     const handleLogin = async () => {
         const result = await userStore.login(email, password); // Ваша функция логина

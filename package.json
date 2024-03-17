@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.2.10",
+    "@radix-ui/react-popover": "^1.0.7",
     "axios": "^1.6.7",
     "input-otp": "^1.1.0",
     "lodash": "^4.17.21",
