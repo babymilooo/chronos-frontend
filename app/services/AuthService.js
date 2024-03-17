@@ -1,6 +1,7 @@
 import axios from 'axios';
 import $api from '../https/axios';
 import { API_URL } from '../https/axios';
+import ToastService from './ToastService';
 
 export default class AuthService {
     static async login(email, password) {
@@ -9,7 +10,7 @@ export default class AuthService {
 
             return response;
         } catch (e) {
-            console.error(e.response?.data?.message);
+            ToastService(e);
         }
     }
 
@@ -19,7 +20,7 @@ export default class AuthService {
 
             return response;
         } catch (e) {
-            console.error(e.response?.data?.message);
+            ToastService(e.response?.data?.message);
         }
     }
 
@@ -28,7 +29,7 @@ export default class AuthService {
             const response = axios.get(`${API_URL}/auth/refresh`, { withCredentials: true });
             return response;
         } catch (e) {
-            console.error(e.response?.data?.message);
+            ToastService(e.response?.data?.message);
         }
     }
 
@@ -38,7 +39,7 @@ export default class AuthService {
             localStorage.clear('accesstoken');
             return response;
         } catch (e) {
-            console.error(e.response?.data?.message);
+            ToastService(e.response?.data?.message);
         }
     }
 
@@ -49,8 +50,7 @@ export default class AuthService {
             console.log(response);
             return response;
         } catch (e) {
-            console.error(e.response?.data?.message);
-            return e;
+            ToastService(e.response?.data?.message);
         }
     }
 
@@ -59,7 +59,7 @@ export default class AuthService {
             const response = await $api.post(`${API_URL}/auth/sendActivationCode`, { email });
             return response;
         } catch (e) {
-            console.error(e.response?.data?.message);
+            ToastService(e.response?.data?.message);
         }
     }
 }
