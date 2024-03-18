@@ -28,25 +28,5 @@
     :root[data-theme='light'] {
         --color-bkg: 253 253 253;
         --color-content: 0 0 0;
-    }
-
-    @keyframes popover-enter {
-        0% { opacity: 0; transform: scale(0.95); }
-        100% { opacity: 1; transform: scale(1); }
-    }
-    
-    @keyframes popover-exit {
-        0% { opacity: 1; transform: scale(1); }
-        100% { opacity: 0; transform: scale(0.95); }
-    }
-    
-    [data-state-open='popover-enter'] {
-        animation: popover-enter 300ms ease-in-out forwards;
-    }
-    
-    [data-state-closed='popover-exit'] {
-        animation: popover-exit 300ms ease-in-out forwards;
-    }
-    
-    
+    }    
 }

@@ -48,7 +48,8 @@ const calendar = () => {
                     const eventsDataWithDateTime = await EventsUtils.eventsDataWithDateTime(eventsData);
 
                     // Merge events and holidays into one array
-                    const mergedCalendar = [...holidaysData, ...eventsDataWithDateTime];
+                    const mergedCalendar = holidaysData.map(holiday => ({ ...holiday, type: 'holiday' }))
+                        .concat(eventsDataWithDateTime.map(event => ({ ...event, type: 'event' })));
 
                     // Get the calendar grid
                     const calendarGrid = CalendarUtils.getCalendarGrid(currentYear, currentMonth, mergedCalendar);
@@ -85,8 +86,8 @@ const calendar = () => {
     }
 
     return (
-        <div className="flex flex-col h-screen">
-
+        <div className="flex flex-col h-screen select-none">
+            <MyNavbar />
             {/* The rest of the content will flex to take up the remaining space */}
             <div className="flex flex-grow overflow-hidden">
                 <div className="w-1/6 border-r-2 p-4 bg-gray-100"> {/* Sidebar */}
@@ -159,22 +160,48 @@ const calendar = () => {
                             {/* Calendar cells */}
                             {calendar.map((item, index) => (
                                 <Popover key={index}>
-                                    <PopoverTrigger asChild>
-                                        <div className="flex border-t p-2 cursor-pointer w-full h-full">
+                                    {item.day ?
+                                        <PopoverTrigger asChild>
+                                            <div className="flex border-t p-2 cursor-pointer w-full h-full">
+                                                <div className="text-small font-bold">
+                                                    {`${item.day}${item.data ? ` - ${item.data.name}` : ''}`}
+                                                </div>
+                                            </div>
+                                        </PopoverTrigger> : <div className="flex border-t p-2 w-full h-full">
                                             <div className="text-small font-bold">
                                                 {`${item.day}${item.data ? ` - ${item.data.name}` : ''}`}
                                             </div>
                                         </div>
-                                    </PopoverTrigger>
-                                    <PopoverContent
-                                        className="bg-bkg transition-opacity duration-300 ease-in-out"
-                                        data-state-open="popover-enter"
-                                        data-state-closed="popover-exit"
-                                    >
-                                        {/* Popover content here */}
+                                    }
+                                    <PopoverContent side="left">
+                                        <div>
+                                            <div className="flex items-end border-b p-2">
+                                                <p className="font-bold text-xl">{item.day}</p>
+                                                <div>{item.data && item.data.type === 'holiday' ?
+                                                    <div className="flex">
+                                                        <p className="ml-1">{item.data.name}</p>
+                                                    </div>
+                                                    :
+                                                    null
+                                                }</div>
+                                            </div>
+                                            <div>
+                                                {item.data && item.data.type === 'events' ? (
+                                                    <div>
+                                                        <p>{item.data.name}</p>
+                                                        {/* Если в data могут быть другие поля, относящиеся к событиям, отобразите их здесь */}
+                                                        <p>{item.data.date}</p>
+                                                        {/* И так далее для других полей */}
+                                                    </div>
+                                                ) : (
+                                                    <p>No events</p>
+                                                )}
+                                            </div>
+                                        </div>
                                     </PopoverContent>
 
                                 </Popover>
+
                             ))}
 
                         </div>

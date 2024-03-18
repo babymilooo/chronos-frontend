@@ -41,7 +41,7 @@ const RootLayout = ({ children }) => {
             </Head>
             <Providers>
                 <div className="bg-bkg text-content">
-                    {!userStore.isLoading ? <MyNavbar /> : null}
+                    {/* {!userStore.isLoading ? <MyNavbar /> : null} */}
                     {children}
                 </div>
             </Providers>
