@@ -175,7 +175,7 @@ const calendar = () => {
                                     }
                                     <PopoverContent side="left" className="p-4 rounded-md">
                                         <div>
-                                            <div className="flex items-end border-b p-2">
+                                            <div className="flex items-end border-b border-content2 p-2">
                                                 <p className="font-bold text-xl">{item.day}</p>
                                                 <div>{item.data && item.data.type === 'holiday' ?
                                                     <div className="flex">
