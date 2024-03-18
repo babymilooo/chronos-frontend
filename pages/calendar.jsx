@@ -90,7 +90,7 @@ const calendar = () => {
             <MyNavbar />
             {/* The rest of the content will flex to take up the remaining space */}
             <div className="flex flex-grow overflow-hidden">
-                <div className="w-1/6 border-r-2 p-4 bg-gray-100"> {/* Sidebar */}
+                <div className="w-1/6 border-r border-content2 p-4 bg-bkg2"> {/* Sidebar */}
                     <p>Events</p>
                 </div>
                 <div className="w-5/6 overflow-auto p-4"> {/* Main content */}
@@ -106,7 +106,7 @@ const calendar = () => {
                                     size='sm'
                                     onClick={() => setActive('day')}
                                     variant="light"
-                                    style={{ backgroundColor: active === 'day' ? '#e5e5e5' : '' }}
+                                    style={{ backgroundColor: active === 'day' ? 'rgb(var(--color-bkg2))' : '' }}
                                     className="text-red-500"
                                 >
                                     Day
@@ -115,7 +115,7 @@ const calendar = () => {
                                     size='sm'
                                     onClick={() => setActive('week')}
                                     variant="light"
-                                    style={{ backgroundColor: active === 'week' ? '#e5e5e5' : '' }}
+                                    style={{ backgroundColor: active === 'week' ? 'rgb(var(--color-bkg2))' : '' }}
                                     className="text-red-500"
                                 >
                                     Week
@@ -124,7 +124,7 @@ const calendar = () => {
                                     size='sm'
                                     onClick={() => setActive('month')}
                                     variant="light"
-                                    style={{ backgroundColor: active === 'month' ? '#e5e5e5' : '' }}
+                                    style={{ backgroundColor: active === 'month' ? 'rgb(var(--color-bkg2))' : '' }}
                                     className="text-red-500"
                                 >
                                     Month
@@ -136,7 +136,7 @@ const calendar = () => {
                             <Button size='sm' isIconOnly variant="light" aria-label="Like">
                                 <img src="images/chevrons/chevron-left.svg" className="p-2" />
                             </Button>
-                            <Button size='sm' variant="light" aria-label="Like" className="text-red-500">
+                            <Button size='sm' variant="light" className="text-red-500">
                                 Today
                             </Button>
 
@@ -162,18 +162,18 @@ const calendar = () => {
                                 <Popover key={index}>
                                     {item.day ?
                                         <PopoverTrigger asChild>
-                                            <div className="flex border-t p-2 cursor-pointer w-full h-full">
+                                            <div className="flex border-t border-content2 p-2 cursor-pointer w-full h-full">
                                                 <div className="text-small font-bold">
                                                     {`${item.day}${item.data ? ` - ${item.data.name}` : ''}`}
                                                 </div>
                                             </div>
-                                        </PopoverTrigger> : <div className="flex border-t p-2 w-full h-full">
+                                        </PopoverTrigger> : <div className="flex border-t border-content2 p-2 w-full h-full">
                                             <div className="text-small font-bold">
                                                 {`${item.day}${item.data ? ` - ${item.data.name}` : ''}`}
                                             </div>
                                         </div>
                                     }
-                                    <PopoverContent side="left">
+                                    <PopoverContent side="left" className="p-4 rounded-md">
                                         <div>
                                             <div className="flex items-end border-b p-2">
                                                 <p className="font-bold text-xl">{item.day}</p>

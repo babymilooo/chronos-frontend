@@ -12,7 +12,9 @@ module.exports = {
     extend: {
       colors: {
         bkg: 'rgb(var(--color-bkg) / <alpha-value>)',
-        content: 'rgb(var(--color-content) / <alpha-value>)'
+        content: 'rgb(var(--color-content) / <alpha-value>)',
+        bkg2: 'rgb(var(--color-bkg2) / <alpha-value>)',
+        content2: 'rgb(var(--color-content2) / <alpha-value>)'
       },
       margin: {
         '5p': '5%', // для 5% margin
