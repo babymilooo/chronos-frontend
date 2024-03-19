@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
 import { observer } from 'mobx-react-lite';
 import { RootStoreContext } from "../provider/rootStoreProvider";
-import { Providers } from './../providers';
+import { Providers } from '../provider/providers';
 import MyNavbar from "../components/Navbar";
 
 const RootLayout = ({ children }) => {

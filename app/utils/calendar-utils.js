@@ -49,6 +49,35 @@ class CalendarUtils {
         return weekCalendarGrid;
     };
 
+    static getCurrentWeekNumber = (year, month) => {
+        // Get the first day of the month
+        const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
+
+        // Get the current date
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
+        const currentDay = currentDate.getDate();
+
+        // Check if the current month and year match the provided arguments
+        if (year !== currentYear || month !== currentMonth) {
+            return 1; // If not, return 1 as default
+        }
+
+        // Calculate the week number
+        const dayOfMonth = currentDate.getDate();
+        const weekDay = currentDate.getDay();
+
+        // Find the previous Sunday
+        const previousSunday = dayOfMonth - weekDay;
+
+        // Calculate current week number
+        let weekNumber = Math.ceil((previousSunday + firstDayOfMonth) / 7);
+
+        return weekNumber;
+    };
+
+
 }
 
 export default CalendarUtils;
