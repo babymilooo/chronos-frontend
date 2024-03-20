@@ -35,13 +35,18 @@ const WeekCalendarGrid = ({ week }) => {
         return { hour, minute }; // Return an object with hour and minute
     });
 
+    const convertToMinutes = (timeString) => {
+        const time = new Date(timeString);
+        return time.getHours() * 60 + time.getMinutes();
+    };
+
     return (
-        <div className="grid grid-cols-[50px_repeat(7,_1fr)] w-full relative">
+        <div className="grid grid-cols-[50px_repeat(7,_1fr)] w-full relative border-content2 border">
             {/* Time slots column */}
             <div className="col-span-1">
-                <div className="flex justify-end items-center border-t border-l p-2 text-bkg border-content2">1</div>
+                <div className="flex justify-end items-center p-2 text-bkg">1</div>
                 {timeSlots.map((time, index) => (
-                    <div key={index} className="flex justify-end items-top h-[50px] font-bold pr-1 border-l border-content2">
+                    <div key={index} className="flex justify-end items-top h-[50px] font-bold pr-1">
                         {/* {time.minute === '00' ? time.hour : ''} */}
                         {time.hour + ':' + time.minute}
                     </div>
@@ -49,47 +54,72 @@ const WeekCalendarGrid = ({ week }) => {
             </div>
 
             {/* Day columns */}
-            {week.map((day, dayIndex) => (
-                <div key={dayIndex} className="col-span-1">
-                    {/* Day header */}
-                    <div className="border p-2 text-center font-bold border-content2">{day.day}</div>
-                    {/* Empty slots for each 30-minute interval in a day */}
-                    {timeSlots.map((_, timeIndex) => (
-                        <Popover key={timeIndex}>
-                            <PopoverTrigger asChild>
-                                <div className="border border-content2 p-2 h-[50px]">
+            {week.map((dayData, dayIndex) => {
+                return (
+                    <div key={dayIndex} className="col-span-1 relative" style={{ zIndex: 2 }}>
+                        {/* Day header */}
+                        <div className="border-l p-2 text-center font-bold border-content2">{dayData.day}</div>
+                        {/* Empty slots for each 30-minute interval in a day */}
+                        <div className="relative z-10">
+                            {timeSlots.map((time, timeIndex) => (
+                                <Popover key={timeIndex}>
+                                    <PopoverTrigger asChild>
+                                        <div className="border-l border-t border-content2 p-2 h-[50px] z-2 hover:bg-bkg2">
 
-                                </div>
-                            </PopoverTrigger>
-                            <PopoverContent side="left" className="p-4 rounded-md">
-                                <div>
-                                    <div className="flex items-end border-b border-content2 p-2">
-                                        <p className="font-bold text-xl">{timeSlots[timeIndex].hour + ':' + timeSlots[timeIndex].minute}</p>
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent side="left" className="p-4 rounded-md">
+                                        <div>
+                                            <div className="flex items-end border-b border-content2 p-2">
+                                                <p className="font-bold text-xl">{timeSlots[timeIndex].hour + ':' + timeSlots[timeIndex].minute}</p>
+                                            </div>
+                                            <div>
+                                                <p>No events</p>
+                                            </div>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
+                            ))}
+                        </div>
+
+                        <div className="absolute top-0 left-0 w-full z-20">
+                            {dayData.data?.map((event, eventIndex) => {
+                                if (event.type !== "event") return null;
+
+                                const startMinutes = convertToMinutes(event.data.startTime);
+                                const endMinutes = convertToMinutes(event.data.endTime);
+                                const duration = endMinutes - startMinutes;
+                                const topOffset = (startMinutes / 30) * 50 + 40; // 30 minutes per slot
+                                const height = (duration / 30) * 50; // 30 minutes per slot
+
+                                return (
+                                    <div
+                                        key={eventIndex}
+                                        className="absolute left-0 border border-content2 rounded-xl bg-red-500"
+                                        style={{
+                                            top: `${topOffset}px`,
+                                            height: `${height}px`,
+                                            width: `calc(100% - 1rem)`, // Adjust width as needed
+                                            // left: `0.25rem`, // Adjust left as needed
+                                            zIndex: 30,
+                                        }}
+                                    >
+                                        {/* Event content */}
+                                        <div className="p-2">
+                                            <h3 className="text-sm font-bold">{event.data.name}</h3>
+                                            <p className="text-xs">{event.description}</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p>No events</p>
-                                    </div>
-                                </div>
-                            </PopoverContent>
-                        </Popover>
-                    ))}
-                </div>
-            ))}
+                                );
+                            })}
 
-            <div className="relative">
-                {week.map((day) => (
-                    // Check if day.data and day.data.events exist before mapping
-                    day.data && day.data.events
-                        ? day.data.events.map((event) => (
-                            <EventCard key={event.uniqueId} event={event} />
-                        ))
-                        : null
-                ))}
-            </div>
-
+                        </div>
+                    </div>
+                )
+            })}
             <div
                 className="absolute bg-red-500 h-[2px] w-full"
-                style={{ top: `${currentTimeOffset}px`, zIndex: 999 }}
+                style={{ top: `${currentTimeOffset}px`, zIndex: 49 }}
             />
         </div >
     );

@@ -87,21 +87,6 @@ const calendar = () => {
 
     }, [userStore.isLoading, holidaysStore.holidays]);
 
-    useEffect(() => {
-
-    }, [monthCalendar, week]);
-    // const handleClick = () => {
-    //     const year = '2025';
-    //     const country = 'Ukraine';
-    //     const type = 'major_holidays';
-
-    //     // Dynamically generate the URL with parameters
-    //     Router.push({
-    //         pathname: `/calendar/${year}`,
-    //         query: { country, type }
-    //     });
-    // };
-
     if (loading) {
         console.log("Loading...");
         return <div>Loading...</div>;
