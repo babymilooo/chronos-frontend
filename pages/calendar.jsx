@@ -10,6 +10,7 @@ import MyNavbar from '@/app/components/Navbar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/app/components/popover/popover';
 import MonthCalendarGrid from '@/app/components/calendarGrids/MonthCalendarGrid';
 import WeekCalenmdarGrid from '@/app/components/calendarGrids/WeekCalenmdarGrid';
+import CalendarNavigation from '@/app/components/calendarNavigation/CalendarNavigation';
 
 const calendar = () => {
     const rootStore = useContext(RootStoreContext);
@@ -17,15 +18,25 @@ const calendar = () => {
     const [currentYear, setCurrentYear] = useState((new Date()).getFullYear());
     const [currentMonth, setCurrentMonth] = useState((new Date()).getMonth() + 1); // Month is zero-based, so add 1
     const [loading, setLoading] = useState(true);
-    const [calendar, setCalendar] = useState([]);
+    const [monthCalendar, setMonthCalendar] = useState([]);
     const [week, setWeek] = useState([]);
     const [active, setActive] = useState('month');
-
-    const monthNames = ["December", "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November"];
-
+    const [calendar, setCalendar] = useState([]);
     // Get the name of the current month using the currentMonth state
-    const currentMonthName = monthNames[currentMonth];
+
+    // This is just a placeholder function to update the month's calendar grid.
+    const updateMonthCalendar = (newCalendar) => {
+        setMonthCalendar(newCalendar);
+    };
+
+    // This is just a placeholder function to update the week's calendar grid.
+    const updateWeekCalendar = (newCalendar) => {
+        setWeek(newCalendar);
+    };
+
+    const handleSetActive = (value) => {
+        setActive(value);
+    };
 
     async function getEvents(id) {
         try {
@@ -37,31 +48,33 @@ const calendar = () => {
         }
     }
 
+    async function createCalendarGrid(mergedCalendar, year, month) {
+        // Get the month calendar grid
+        const calendarGrid = CalendarUtils.getCalendarGrid(year, month, mergedCalendar);
+        setMonthCalendar(calendarGrid);
+        console.log("calendarGrid", calendarGrid);
+        // Get the week calendar grid
+        const weekNumber = CalendarUtils.getCurrentWeekNumber(currentYear, currentMonth);
+        const weekCalendarGrid = CalendarUtils.getWeekCalendarGrid(calendarGrid, weekNumber);
+        setWeek(weekCalendarGrid);
+        console.log("weekCalendarGrid", weekCalendarGrid);
+
+        return;
+    }
     useEffect(() => {
         async function fetchData() {
             try {
                 // Only fetch data if isLoading is false and calendar is empty
                 if (!holidaysStore.isLoading && calendar.length === 0) {
                     const holidaysData = holidaysStore.holidays.map(holiday => ({ ...holiday }));
-                    console.log("holidaysData", holidaysData);
                     const eventsData = await getEvents(userStore.user.id);
-                    console.log("eventsData", eventsData);
-                    // Merge events and holidays into one array
                     const eventsDataWithDateTime = await EventsUtils.eventsDataWithDateTime(eventsData);
-
                     // Merge events and holidays into one array
-                    const mergedCalendar = holidaysData.map(holiday => ({ ...holiday, type: 'holiday' }))
-                        .concat(eventsDataWithDateTime.map(event => ({ ...event, type: 'event' })));
-
-                    // Get the calendar grid
-                    const calendarGrid = CalendarUtils.getCalendarGrid(currentYear, currentMonth, mergedCalendar);
-                    setCalendar(calendarGrid);
-
-                    // Get the week calendar grid
-                    const weekNumber = CalendarUtils.getCurrentWeekNumber(currentYear, currentMonth);
-                    const weekCalendarGrid = CalendarUtils.getWeekCalendarGrid(calendarGrid, weekNumber);
-                    setWeek(weekCalendarGrid);
-
+                    const mergedCalendar = holidaysData.map(holiday => ({ data: { ...holiday }, type: 'holiday' }))
+                        .concat(eventsDataWithDateTime.map(event => ({ data: { ...event }, type: 'event' })));
+                    // Create the calendar grid
+                    setCalendar(mergedCalendar);
+                    await createCalendarGrid(mergedCalendar, currentYear, currentMonth);
 
                     setLoading(false);
                 }
@@ -70,11 +83,13 @@ const calendar = () => {
                 setLoading(false);
             }
         }
-        fetchData(); // Call fetchData if there is a user ID
+        fetchData();
 
     }, [userStore.isLoading, holidaysStore.holidays]);
 
+    useEffect(() => {
 
+    }, [monthCalendar, week]);
     // const handleClick = () => {
     //     const year = '2025';
     //     const country = 'Ukraine';
@@ -101,61 +116,9 @@ const calendar = () => {
                     <p>Events</p>
                 </div>
                 <div className="w-5/6 overflow-auto p-4"> {/* Main content */}
-                    {/* Calendar header */}
-                    <div className="flex justify-between items-center mb-4">
-                        <div className="text-red-500">
-                            <span className="font-bold text-xl">{currentMonthName}</span>
-                            <span className="text-xl pl-1">{currentYear}</span>
-                        </div>
-                        <div className="">
-                            <ButtonGroup>
-                                <Button
-                                    size='sm'
-                                    onClick={() => setActive('day')}
-                                    variant="light"
-                                    style={{ backgroundColor: active === 'day' ? 'rgb(var(--color-bkg2))' : '' }}
-                                    className="text-red-500"
-                                >
-                                    Day
-                                </Button>
-                                <Button
-                                    size='sm'
-                                    onClick={() => setActive('week')}
-                                    variant="light"
-                                    style={{ backgroundColor: active === 'week' ? 'rgb(var(--color-bkg2))' : '' }}
-                                    className="text-red-500"
-                                >
-                                    Week
-                                </Button>
-                                <Button
-                                    size='sm'
-                                    onClick={() => setActive('month')}
-                                    variant="light"
-                                    style={{ backgroundColor: active === 'month' ? 'rgb(var(--color-bkg2))' : '' }}
-                                    className="text-red-500"
-                                >
-                                    Month
-                                </Button>
-                            </ButtonGroup>
-                        </div>
-
-                        <div className="flex justify-between items-center mr-10">
-                            <Button size='sm' isIconOnly variant="light" aria-label="Like">
-                                <img src="images/chevrons/chevron-left.svg" className="p-2" />
-                            </Button>
-                            <Button size='sm' variant="light" className="text-red-500">
-                                Today
-                            </Button>
-
-                            <Button size='sm' variant="light" isIconOnly aria-label="Take a photo">
-                                <img src="images/chevrons/chevron-right.svg" className="p-2" />
-
-                            </Button>
-                        </div>
-                    </div>
-
+                    <CalendarNavigation setMonthCalendar={updateMonthCalendar} setWeekCalendar={updateWeekCalendar} mergedCalendar={calendar} active={active} setActive={handleSetActive} />
                     {active === 'month' ? (
-                        <MonthCalendarGrid calendar={calendar} />
+                        <MonthCalendarGrid calendar={monthCalendar} />
                     ) : active === 'week' ? (
                         <WeekCalenmdarGrid week={week} />
                     ) : active === 'day' ? (

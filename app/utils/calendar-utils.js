@@ -8,7 +8,19 @@ class CalendarUtils {
     };
 
     static getCalendarGrid = (year, month, mergedCalendar) => {
-        // Get the first day of the current month and the number of days in the previous and current months
+        // Helper function to create the date string
+        const buildDateString = (year, month, day) =>
+            `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+        // Helper function to get data for a specific day
+        const getDataForDay = (year, month, day) =>
+            mergedCalendar.filter(item => {
+                const itemDate = new Date(item.data.date);
+                return itemDate.getFullYear() === year &&
+                    itemDate.getMonth() + 1 === month &&
+                    itemDate.getDate() === day;
+            }).map(item => ({ data: { ...item.data }, type: item.type }));
+
         const firstDayOfWeek = this.getFirstDayOfMonth(year, month);
         const daysInPreviousMonth = this.getDaysInMonth(year, month - 1);
         const daysInCurrentMonth = this.getDaysInMonth(year, month);
@@ -17,26 +29,34 @@ class CalendarUtils {
 
         // Add days from the previous month
         for (let i = daysInPreviousMonth - firstDayOfWeek + 1; i <= daysInPreviousMonth; i++) {
-            calendarGrid.push({ day: i, data: null, isPrevMonth: true });
+            const prevMonthYear = month === 1 ? year - 1 : year;
+            const prevMonth = month === 1 ? 12 : month - 1;
+            const dateStr = buildDateString(prevMonthYear, prevMonth, i);
+            const data = getDataForDay(prevMonthYear, prevMonth, i);
+            calendarGrid.push({ day: i, dateStr, data, isPrevMonth: true });
         }
 
         // Add days from the current month
         for (let i = 1; i <= daysInCurrentMonth; i++) {
-            const data = mergedCalendar.find(item => {
-                const date = new Date(item.date);
-                return date.getDate() === i && date.getMonth() + 1 === month;
-            });
-            calendarGrid.push({ day: i, data, isCurrentMonth: true });
+            const dateStr = buildDateString(year, month, i);
+            const data = getDataForDay(year, month, i);
+            calendarGrid.push({ day: i, dateStr, data, isCurrentMonth: true });
         }
 
         // Add days from the next month
-        const daysInNextMonth = 42 - calendarGrid.length; // Assuming a 6-row calendar
-        for (let i = 1; i <= daysInNextMonth; i++) {
-            calendarGrid.push({ day: i, data: null, isNextMonth: true });
+        let nextMonthDaysAdded = 0;
+        while (calendarGrid.length < 42) { // Assuming a 6-row calendar
+            nextMonthDaysAdded++;
+            const nextMonthYear = month === 12 ? year + 1 : year;
+            const nextMonth = month === 12 ? 1 : month + 1;
+            const dateStr = buildDateString(nextMonthYear, nextMonth, nextMonthDaysAdded);
+            const data = getDataForDay(nextMonthYear, nextMonth, nextMonthDaysAdded);
+            calendarGrid.push({ day: nextMonthDaysAdded, dateStr, data, isNextMonth: true });
         }
 
         return calendarGrid;
     };
+
 
     static getWeekCalendarGrid = (monthCalendarGrid, weekNumber) => {
         // Calculate the index range for the desired week
