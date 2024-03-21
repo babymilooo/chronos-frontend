@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/app/components/popover/popover';
-import EventCard from '../EventCard';
+import EventsUtils from '@/app/utils/events-utils';
 const getCurrentTimeOffset = () => {
     const now = new Date();
     const minutesSinceMidnight = now.getHours() * 60 + now.getMinutes() + 25;
@@ -17,7 +17,6 @@ const WeekCalendarGrid = ({ week }) => {
     const totalSlots = hoursInDay * slotsPerHour;
     const [currentTimeOffset, setCurrentTimeOffset] = useState(getCurrentTimeOffset());
 
-    console.log(week);
     useEffect(() => {
         // Update the indicator's position every minute
         const intervalId = setInterval(() => {
@@ -40,6 +39,8 @@ const WeekCalendarGrid = ({ week }) => {
         return time.getHours() * 60 + time.getMinutes();
     };
 
+    const groupedEvents = EventsUtils.groupEventsByDate(week);
+    console.log(groupedEvents);
     return (
         <div className="grid grid-cols-[50px_repeat(7,_1fr)] w-full relative border-content2 border">
             {/* Time slots column */}
@@ -54,7 +55,8 @@ const WeekCalendarGrid = ({ week }) => {
             </div>
 
             {/* Day columns */}
-            {week.map((dayData, dayIndex) => {
+
+            {groupedEvents.map((dayData, dayIndex) => {
                 return (
                     <div key={dayIndex} className="col-span-1 relative" style={{ zIndex: 2 }}>
                         {/* Day header */}
@@ -86,30 +88,39 @@ const WeekCalendarGrid = ({ week }) => {
                             {dayData.data?.map((event, eventIndex) => {
                                 if (event.type !== "event") return null;
 
-                                const startMinutes = convertToMinutes(event.data.startTime);
-                                const endMinutes = convertToMinutes(event.data.endTime);
-                                const duration = endMinutes - startMinutes;
-                                const topOffset = (startMinutes / 30) * 50 + 40; // 30 minutes per slot
-                                const height = (duration / 30) * 50; // 30 minutes per slot
+
+                                const width = 100 / event.sameStartTimeCount;
+                                const leftOffset = width * event.positionInGroup;
 
                                 return (
-                                    <div
-                                        key={eventIndex}
-                                        className="absolute left-0 border border-content2 rounded-xl bg-red-500"
-                                        style={{
-                                            top: `${topOffset}px`,
-                                            height: `${height}px`,
-                                            width: `calc(100% - 1rem)`, // Adjust width as needed
-                                            // left: `0.25rem`, // Adjust left as needed
-                                            zIndex: 30,
-                                        }}
-                                    >
-                                        {/* Event content */}
-                                        <div className="p-2">
-                                            <h3 className="text-sm font-bold">{event.data.name}</h3>
-                                            <p className="text-xs">{event.description}</p>
-                                        </div>
-                                    </div>
+                                    <Popover key={eventIndex}>
+                                        <PopoverTrigger asChild>
+                                            <div className="absolute left-0 border border-content2 rounded-xl bg-red-500"
+                                                style={{
+                                                    top: `${event.topOffset}px`,
+                                                    height: `${event.height}px`,
+                                                    width: `calc(${width}% - 2px)`,
+                                                    left: `calc(${leftOffset}%)`,
+                                                    zIndex: 30,
+                                                }}
+                                            >
+                                                <div className="p-2">
+                                                    <h3 className="text-sm font-bold">{event.data.name}</h3>
+                                                    <p className="text-xs">{event.description}</p>
+                                                </div>
+                                            </div>
+                                        </PopoverTrigger>
+                                        <PopoverContent side="left" className="p-4 rounded-md">
+                                            <div>
+                                                <div className="flex items-end border-b border-content2 p-2">
+                                                    <p className="font-bold text-xl">{event.data.startTime}</p>
+                                                </div>
+                                                <div>
+                                                    <p>{event.data.name}</p>
+                                                </div>
+                                            </div>
+                                        </PopoverContent>
+                                    </Popover>
                                 );
                             })}
 
