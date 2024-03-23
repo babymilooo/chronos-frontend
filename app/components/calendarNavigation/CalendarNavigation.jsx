@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, mergedCalendar, active, setActive }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const monthNames = ["December", "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November"];
+        "July", "August", "September", "October", "November", "December"];
 
     // Get the name of the current month using the currentMonth state
     const currentMonthName = monthNames[currentDate.getMonth() + 1];

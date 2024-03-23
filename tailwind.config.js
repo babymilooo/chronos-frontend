@@ -24,6 +24,9 @@ module.exports = {
       borderRadius: {
         large: '1.5rem',
       },
+      animation: {
+        'jump-in-centered': 'jump-in-centered 0.25s both',
+      },
     },
   },
 

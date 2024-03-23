@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/app/components/popover/popover';
 import EventsUtils from '@/app/utils/events-utils';
+import MyDialog from '../dialog/MyDialog';
+
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/app/components/dialog/index"
+import { Input } from '@nextui-org/react';
+
 const getCurrentTimeOffset = () => {
     const now = new Date();
     const minutesSinceMidnight = now.getHours() * 60 + now.getMinutes() + 25;
@@ -64,27 +76,58 @@ const WeekCalendarGrid = ({ week }) => {
                         {/* Empty slots for each 30-minute interval in a day */}
                         <div className="relative z-10">
                             {timeSlots.map((time, timeIndex) => (
-                                <Popover key={timeIndex}>
-                                    <PopoverTrigger asChild>
-                                        <div className="border-l border-t border-content2 p-2 h-[50px] z-2 hover:bg-bkg2">
+                                // <Popover key={timeIndex}>
+                                //     <PopoverTrigger asChild>
+                                //         <div className="border-l border-t border-content2 p-2 h-[50px] z-2 hover:bg-bkg2">
+
+                                //         </div>
+                                //     </PopoverTrigger>
+                                //     <PopoverContent side="left" className="p-4 rounded-md">
+                                //         <div>
+                                //             <div className="flex items-end border-b border-content2 p-2">
+                                //                 <p className="font-bold text-xl">{timeSlots[timeIndex].hour + ':' + timeSlots[timeIndex].minute}</p>
+                                //             </div>
+                                //             <div>
+                                //                 <p>No events</p>
+                                //             </div>
+                                //         </div>
+                                //     </PopoverContent>
+                                // </Popover>
+                                <Dialog key={timeIndex}>
+                                    <DialogTrigger asChild>
+                                        <div className="border-l border-t border-content2 p-2 h-[50px] w-full z-2 hover:bg-bkg2">
 
                                         </div>
-                                    </PopoverTrigger>
-                                    <PopoverContent side="left" className="p-4 rounded-md">
-                                        <div>
-                                            <div className="flex items-end border-b border-content2 p-2">
-                                                <p className="font-bold text-xl">{timeSlots[timeIndex].hour + ':' + timeSlots[timeIndex].minute}</p>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>New Event</DialogTitle>
+                                            <DialogDescription>
+                                                This action cannot be undone. This will permanently delete your account
+                                                and remove your data from our servers.
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <div className="grid gap-4 py-4">
+                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                <Input type="eventname" label="Add name" />
                                             </div>
-                                            <div>
-                                                <p>No events</p>
+                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                <Label htmlFor="username" className="text-right">
+                                                    Username
+                                                </Label>
+                                                <Input id="username" value="@peduarte" className="col-span-3" />
                                             </div>
                                         </div>
-                                    </PopoverContent>
-                                </Popover>
+                                        <DialogFooter>
+                                            <Button type="submit">Save changes</Button>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
+
                             ))}
                         </div>
 
-                        <div className="absolute top-0 left-0 w-full z-20">
+                        <div className="absolute top-0 left-0 w-[95%] z-20">
                             {dayData.data?.map((event, eventIndex) => {
                                 if (event.type !== "event") return null;
 

@@ -36,5 +36,20 @@
         --color-content: 0 0 0;
         --color-bkg2: 245 245 245;
         --color-content2: 229 229 229;
-    }    
+    }
+
+    @keyframes jump-in-centered {
+        0% {
+            transform: translate(-50%, -50%) scale(0%);
+        }
+
+        80% {
+            transform: translate(-50%, -50%) scale(120%);
+        }
+
+        100% {
+            transform: translate(-50%, -50%) scale(100%);
+        }
+    }
+
 }
