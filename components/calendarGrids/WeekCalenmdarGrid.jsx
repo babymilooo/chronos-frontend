@@ -11,18 +11,11 @@ import {
     PopoverTrigger as MyPopoverTrigger
 } from '@/components/MyPopover';
 
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-
-import { cn } from "@/lib/utils"
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 
-import DatePicker from '../DatePicker';
+import { CreateNewEvent } from '../CreateNewEvent';
 
 const getCurrentTimeOffset = () => {
     const now = new Date();
@@ -34,7 +27,7 @@ const getCurrentTimeOffset = () => {
 };
 
 
-const WeekCalendarGrid = ({ week }) => {
+const WeekCalendarGrid = ({ week, date }) => {
     const hoursInDay = 24;
     const slotsPerHour = 2; // 15-minute intervals
     const totalSlots = hoursInDay * slotsPerHour;
@@ -58,13 +51,9 @@ const WeekCalendarGrid = ({ week }) => {
         return { hour, minute }; // Return an object with hour and minute
     });
 
-    const convertToMinutes = (timeString) => {
-        const time = new Date(timeString);
-        return time.getHours() * 60 + time.getMinutes();
-    };
-
     const groupedEvents = EventsUtils.groupEventsByDate(week);
     console.log(groupedEvents);
+    console.log(timeSlots);
     return (
         <div className="grid grid-cols-[50px_repeat(7,_1fr)] w-full relative border-content2 border">
             {/* Time slots column */}
@@ -90,30 +79,13 @@ const WeekCalendarGrid = ({ week }) => {
                             {timeSlots.map((time, timeIndex) => (
                                 <Dialog key={timeIndex}>
                                     <DialogTrigger asChild>
-                                        <div className="border-l border-t border-content2 p-2 h-[50px] w-full z-2 hover:bg-bkg2">
-
-                                        </div>
+                                        <div className="border-l border-t border-content2 p-2 h-[50px] w-full z-2 hover:bg-background2"></div>
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader>
                                             <DialogTitle className="text-3xl font-bold">New Event</DialogTitle>
                                         </DialogHeader>
-                                        <div className="grid py-4">
-                                            <div className="grid grid-cols-4 items-center gap-4">
-                                                <Label htmlFor="username" className="text-right font-bold">
-                                                    Name
-                                                </Label>
-                                                <Input id="username" value="@peduarte" className="col-span-3" />
-                                            </div>
-                                            <div className="flex items-center justify-between pt-4">
-                                                <DatePicker cn={cn} date={startDate} format={format} setDate={setStartDate} />
-                                                <p>to</p>
-                                                <DatePicker cn={cn} date={endDate} format={format} setDate={setEndDate} />
-                                            </div>
-                                        </div>
-                                        <DialogFooter>
-                                            <Button type="submit">Save changes</Button>
-                                        </DialogFooter>
+                                        <CreateNewEvent date={dayData.dateStr} time={time} />
                                     </DialogContent>
                                 </Dialog>
 

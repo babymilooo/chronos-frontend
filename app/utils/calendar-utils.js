@@ -1,4 +1,28 @@
 class CalendarUtils {
+    static createCalendarGrid = async (mergedCalendar, year, month, date, setMonthCalendar, setWeek, setDay) => {
+        // Get the month calendar grid
+        const calendarGrid = this.getCalendarGrid(year, month, mergedCalendar);
+        setMonthCalendar(calendarGrid);
+        console.log("calendarGrid", calendarGrid);
+        // Get the week calendar grid
+        const weekNumber = this.getCurrentWeekNumber(date);
+        const weekCalendarGrid = this.getWeekCalendarGrid(calendarGrid, weekNumber);
+        setWeek(weekCalendarGrid);
+        console.log("weekCalendarGrid", weekCalendarGrid);
+    }
+
+    static updateCalendarGrid = async (date, mergedCalendar, setMonthCalendar, setWeekCalendar, setDayCalendar) => {
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+
+        const monthCalendarGrid = CalendarUtils.getCalendarGrid(year, month, mergedCalendar);
+        setMonthCalendar(monthCalendarGrid);
+
+        const weekNumber = CalendarUtils.getCurrentWeekNumber(date);
+        const weekCalendarGrid = CalendarUtils.getWeekCalendarGrid(monthCalendarGrid, weekNumber);
+        setWeekCalendar(weekCalendarGrid);
+    }
+
     static getDaysInMonth = (year, month) => {
         return new Date(year, month, 0).getDate();
     };
@@ -9,8 +33,10 @@ class CalendarUtils {
 
     static getCalendarGrid = (year, month, mergedCalendar) => {
         // Helper function to create the date string
-        const buildDateString = (year, month, day) =>
-            `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const buildDateObject = (year, month, day) => {
+            // В JavaScript, месяц начинается с 0 (0 для января, 11 для декабря), поэтому вычитаем 1 из месяца.
+            return new Date(year, month - 1, day);
+        };
 
         // Helper function to get data for a specific day
         const getDataForDay = (year, month, day) =>
@@ -31,14 +57,14 @@ class CalendarUtils {
         for (let i = daysInPreviousMonth - firstDayOfWeek + 1; i <= daysInPreviousMonth; i++) {
             const prevMonthYear = month === 1 ? year - 1 : year;
             const prevMonth = month === 1 ? 12 : month - 1;
-            const dateStr = buildDateString(prevMonthYear, prevMonth, i);
+            const dateStr = buildDateObject(prevMonthYear, prevMonth, i);
             const data = getDataForDay(prevMonthYear, prevMonth, i);
             calendarGrid.push({ day: i, dateStr, data, isPrevMonth: true });
         }
 
         // Add days from the current month
         for (let i = 1; i <= daysInCurrentMonth; i++) {
-            const dateStr = buildDateString(year, month, i);
+            const dateStr = buildDateObject(year, month, i);
             const data = getDataForDay(year, month, i);
             calendarGrid.push({ day: i, dateStr, data, isCurrentMonth: true });
         }
@@ -49,7 +75,7 @@ class CalendarUtils {
             nextMonthDaysAdded++;
             const nextMonthYear = month === 12 ? year + 1 : year;
             const nextMonth = month === 12 ? 1 : month + 1;
-            const dateStr = buildDateString(nextMonthYear, nextMonth, nextMonthDaysAdded);
+            const dateStr = buildDateObject(nextMonthYear, nextMonth, nextMonthDaysAdded);
             const data = getDataForDay(nextMonthYear, nextMonth, nextMonthDaysAdded);
             calendarGrid.push({ day: nextMonthDaysAdded, dateStr, data, isNextMonth: true });
         }
@@ -69,24 +95,13 @@ class CalendarUtils {
         return weekCalendarGrid;
     };
 
-    static getCurrentWeekNumber = (year, month) => {
+    static getCurrentWeekNumber = (date) => {
         // Get the first day of the month
-        const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
+        const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
 
-        // Get the current date
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
-        const currentDay = currentDate.getDate();
-
-        // Check if the current month and year match the provided arguments
-        if (year !== currentYear || month !== currentMonth) {
-            return 1; // If not, return 1 as default
-        }
-
-        // Calculate the week number
-        const dayOfMonth = currentDate.getDate();
-        const weekDay = currentDate.getDay();
+        // Calculate the week number based on the provided date
+        const dayOfMonth = date.getDate();
+        const weekDay = date.getDay();
 
         // Find the previous Sunday
         const previousSunday = dayOfMonth - weekDay;
@@ -96,7 +111,6 @@ class CalendarUtils {
 
         return weekNumber;
     };
-
 
 }
 
