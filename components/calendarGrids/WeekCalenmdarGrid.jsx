@@ -1,17 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/app/components/popover/popover';
+import { useEffect, useState } from 'react';
+import { format } from "date-fns"
+
 import EventsUtils from '@/app/utils/events-utils';
-import MyDialog from '../dialog/MyDialog';
+
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/app/components/dialog/index"
-import { Input } from '@nextui-org/react';
+    Popover as MyPopover,
+    PopoverContent as MyPopoverContent,
+    PopoverTrigger as MyPopoverTrigger
+} from '@/components/MyPopover';
+
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+
+import { cn } from "@/lib/utils"
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
+
+import DatePicker from '../DatePicker';
 
 const getCurrentTimeOffset = () => {
     const now = new Date();
@@ -28,7 +39,8 @@ const WeekCalendarGrid = ({ week }) => {
     const slotsPerHour = 2; // 15-minute intervals
     const totalSlots = hoursInDay * slotsPerHour;
     const [currentTimeOffset, setCurrentTimeOffset] = useState(getCurrentTimeOffset());
-
+    const [startDate, setStartDate] = useState()
+    const [endDate, setEndDate] = useState()
     useEffect(() => {
         // Update the indicator's position every minute
         const intervalId = setInterval(() => {
@@ -76,23 +88,6 @@ const WeekCalendarGrid = ({ week }) => {
                         {/* Empty slots for each 30-minute interval in a day */}
                         <div className="relative z-10">
                             {timeSlots.map((time, timeIndex) => (
-                                // <Popover key={timeIndex}>
-                                //     <PopoverTrigger asChild>
-                                //         <div className="border-l border-t border-content2 p-2 h-[50px] z-2 hover:bg-bkg2">
-
-                                //         </div>
-                                //     </PopoverTrigger>
-                                //     <PopoverContent side="left" className="p-4 rounded-md">
-                                //         <div>
-                                //             <div className="flex items-end border-b border-content2 p-2">
-                                //                 <p className="font-bold text-xl">{timeSlots[timeIndex].hour + ':' + timeSlots[timeIndex].minute}</p>
-                                //             </div>
-                                //             <div>
-                                //                 <p>No events</p>
-                                //             </div>
-                                //         </div>
-                                //     </PopoverContent>
-                                // </Popover>
                                 <Dialog key={timeIndex}>
                                     <DialogTrigger asChild>
                                         <div className="border-l border-t border-content2 p-2 h-[50px] w-full z-2 hover:bg-bkg2">
@@ -101,21 +96,19 @@ const WeekCalendarGrid = ({ week }) => {
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader>
-                                            <DialogTitle>New Event</DialogTitle>
-                                            <DialogDescription>
-                                                This action cannot be undone. This will permanently delete your account
-                                                and remove your data from our servers.
-                                            </DialogDescription>
+                                            <DialogTitle className="text-3xl font-bold">New Event</DialogTitle>
                                         </DialogHeader>
-                                        <div className="grid gap-4 py-4">
+                                        <div className="grid py-4">
                                             <div className="grid grid-cols-4 items-center gap-4">
-                                                <Input type="eventname" label="Add name" />
-                                            </div>
-                                            <div className="grid grid-cols-4 items-center gap-4">
-                                                <Label htmlFor="username" className="text-right">
-                                                    Username
+                                                <Label htmlFor="username" className="text-right font-bold">
+                                                    Name
                                                 </Label>
                                                 <Input id="username" value="@peduarte" className="col-span-3" />
+                                            </div>
+                                            <div className="flex items-center justify-between pt-4">
+                                                <DatePicker cn={cn} date={startDate} format={format} setDate={setStartDate} />
+                                                <p>to</p>
+                                                <DatePicker cn={cn} date={endDate} format={format} setDate={setEndDate} />
                                             </div>
                                         </div>
                                         <DialogFooter>
@@ -136,8 +129,8 @@ const WeekCalendarGrid = ({ week }) => {
                                 const leftOffset = width * event.positionInGroup;
 
                                 return (
-                                    <Popover key={eventIndex}>
-                                        <PopoverTrigger asChild>
+                                    <MyPopover key={eventIndex}>
+                                        <MyPopoverTrigger asChild>
                                             <div className="absolute left-0 border border-content2 rounded-xl bg-red-500"
                                                 style={{
                                                     top: `${event.topOffset}px`,
@@ -152,8 +145,8 @@ const WeekCalendarGrid = ({ week }) => {
                                                     <p className="text-xs">{event.description}</p>
                                                 </div>
                                             </div>
-                                        </PopoverTrigger>
-                                        <PopoverContent side="left" className="p-4 rounded-md">
+                                        </MyPopoverTrigger>
+                                        <MyPopoverContent side="left" className="p-4 rounded-md">
                                             <div>
                                                 <div className="flex items-end border-b border-content2 p-2">
                                                     <p className="font-bold text-xl">{event.data.startTime}</p>
@@ -162,8 +155,8 @@ const WeekCalendarGrid = ({ week }) => {
                                                     <p>{event.data.name}</p>
                                                 </div>
                                             </div>
-                                        </PopoverContent>
-                                    </Popover>
+                                        </MyPopoverContent>
+                                    </MyPopover>
                                 );
                             })}
 
@@ -180,3 +173,5 @@ const WeekCalendarGrid = ({ week }) => {
 };
 
 export default WeekCalendarGrid;
+
+

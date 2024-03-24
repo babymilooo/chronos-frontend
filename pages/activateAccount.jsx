@@ -1,7 +1,7 @@
-import { InputOTPPattern } from '@/app/components/input-OTP/MyInputOTP';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 import AuthService from '@/app/services/AuthService';
-import { Button, Image } from '@nextui-org/react';
+import { InputOTPPattern } from '@/components/MyInputOTP';
+import { Button } from '@/components/ui/button';
 import Router from 'next/router';
 import React, { useContext, useState } from 'react';
 
@@ -28,13 +28,13 @@ const ActivateAccount = () => {
     return (
         <div className="flex flex-col h-screen justify-center items-center bg-bkg text-content">
             <div className='flex items-center border-2 border-solid border-content rounded-2xl p-2 mb-2'>
-                <Image
+                {/* <Image
                     width={40}
                     height={40}
                     alt="Logo"
                     src="/images/logo.svg"
                     className="border-2 border-solid border-black bg-white rounded-xl"
-                />
+                /> */}
                 <p className="ml-2 text-xl font-bold">Calendar</p>
             </div>
             <p className="text-4xl font-bold">Activate Account</p>

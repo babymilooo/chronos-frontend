@@ -1,6 +1,6 @@
 import CalendarUtils from '@/app/utils/calendar-utils';
-import { Button, ButtonGroup } from '@nextui-org/react';
 import React, { useState } from 'react';
+import { Button } from './ui/button';
 
 const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, mergedCalendar, active, setActive }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -57,48 +57,41 @@ const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, mergedCalendar,
                 <span className="text-xl pl-1">{currentYear}</span>
             </div>
             <div>
-                <ButtonGroup>
-                    <Button
-                        size='sm'
-                        onClick={() => setActive('day')}
-                        variant="light"
-                        style={{ backgroundColor: active === 'day' ? 'rgb(var(--color-bkg2))' : '' }}
-                        className="text-red-500"
-                    >
-                        Day
-                    </Button>
-                    <Button
-                        size='sm'
-                        onClick={() => setActive('week')}
-                        variant="light"
-                        style={{ backgroundColor: active === 'week' ? 'rgb(var(--color-bkg2))' : '' }}
-                        className="text-red-500"
-                    >
-                        Week
-                    </Button>
-                    <Button
-                        size='sm'
-                        onClick={() => setActive('month')}
-                        variant="light"
-                        style={{ backgroundColor: active === 'month' ? 'rgb(var(--color-bkg2))' : '' }}
-                        className="text-red-500"
-                    >
-                        Month
-                    </Button>
-                </ButtonGroup>
+                <Button
+                    onClick={() => setActive('day')}
+                    variant="ghost"
+                    style={{ backgroundColor: active === 'day' ? 'hsl(var(--background2))' : '' }}
+                    className="text-red-500"
+                >
+                    Day
+                </Button>
+                <Button
+                    onClick={() => setActive('week')}
+                    variant="ghost"
+                    style={{ backgroundColor: active === 'week' ? 'hsl(var(--background2))' : '' }}
+                    className="text-red-500"
+                >
+                    Week
+                </Button>
+                <Button
+                    onClick={() => setActive('month')}
+                    variant="ghost"
+                    style={{ backgroundColor: active === 'month' ? 'hsl(var(--background2))' : '' }}
+                    className="text-red-500"
+                >
+                    Month
+                </Button>
             </div>
 
             <div className="flex justify-between items-center mr-10">
-                <Button size='sm' isIconOnly variant="light" onClick={goToPrevious}>
+                <Button variant="ghost" onClick={goToPrevious}>
                     <img src="images/chevrons/chevron-left.svg" className="p-2" />
                 </Button>
-                <Button size='sm' variant="light" className="text-red-500" onClick={goToToday}>
+                <Button variant="ghost" className="text-red-500" onClick={goToToday}>
                     Today
                 </Button>
-
-                <Button size='sm' variant="light" isIconOnly onClick={goToNext}>
+                <Button variant="ghost" onClick={goToNext}>
                     <img src="images/chevrons/chevron-right.svg" className="p-2" />
-
                 </Button>
             </div>
         </div>

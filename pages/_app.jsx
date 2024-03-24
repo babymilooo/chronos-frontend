@@ -1,7 +1,6 @@
-import '../app/styles/globals.css'
-import RootLayout from '@/app/layouts/layout';
+import '../app/globals.css'
+import RootLayout from '@/app/layout';
 import RootStoreProvider, { RootStoreContext } from '@/app/provider/rootStoreProvider';
-import MyThemeProvider from '@/app/provider/themesProvider';
 import { useContext, useEffect } from 'react';
 
 export default function App({ Component, pageProps }) {
@@ -28,12 +27,10 @@ export default function App({ Component, pageProps }) {
     }, []);
 
     return (
-        <MyThemeProvider enableSystem={true} attribute="class" class="bg-bgk text-content">
-            <RootStoreProvider>
-                <RootLayout>
-                    <Component {...pageProps} />
-                </RootLayout>
-            </RootStoreProvider>
-        </MyThemeProvider>
+        <RootStoreProvider>
+            <RootLayout>
+                <Component {...pageProps} />
+            </RootLayout>
+        </RootStoreProvider>
     );
 }

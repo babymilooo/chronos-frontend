@@ -1,16 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import Router from 'next/router';
 import CalendarService from '@/app/services/CalendarService';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 import EventsUtils from './../app/utils/events-utils';
 import CalendarUtils from './../app/utils/calendar-utils';
-import { Button, ButtonGroup } from '@nextui-org/react';
-import MyNavbar from '@/app/components/Navbar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/app/components/popover/popover';
-import MonthCalendarGrid from '@/app/components/calendarGrids/MonthCalendarGrid';
-import WeekCalenmdarGrid from '@/app/components/calendarGrids/WeekCalenmdarGrid';
-import CalendarNavigation from '@/app/components/calendarNavigation/CalendarNavigation';
+import CalendarNavigation from '@/components/CalendarNavigation';
+import Navbar from '@/components/Navbar';
+import MonthCalendarGrid from '@/components/calendarGrids/MonthCalendarGrid';
+import WeekCalendarGrid from '@/components/calendarGrids/WeekCalenmdarGrid';
 
 const calendar = () => {
     const rootStore = useContext(RootStoreContext);
@@ -93,11 +90,11 @@ const calendar = () => {
     }
 
     return (
-        <div className="flex flex-col h-screen select-none">
-            <MyNavbar />
+        <div className="flex flex-col h-screen select-none bg-background text-foreground">
+            <Navbar />
             {/* The rest of the content will flex to take up the remaining space */}
             <div className="flex flex-grow overflow-hidden">
-                <div className="w-1/6 border-r border-content2 p-4 bg-bkg2"> {/* Sidebar */}
+                <div className="w-1/6 border-r border p-4 bg-background2"> {/* Sidebar */}
                     <p>Events</p>
                 </div>
                 <div className="w-5/6 overflow-auto p-4"> {/* Main content */}
@@ -105,7 +102,7 @@ const calendar = () => {
                     {active === 'month' ? (
                         <MonthCalendarGrid calendar={monthCalendar} />
                     ) : active === 'week' ? (
-                        <WeekCalenmdarGrid week={week} />
+                        <WeekCalendarGrid week={week} />
                     ) : active === 'day' ? (
                         <div className="grid grid-cols-7 gap-1">
                             {week.map((item, index) => (

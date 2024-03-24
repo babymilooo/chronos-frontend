@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/app/components/popover/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/MyPopover';
 
 const MonthCalendarGrid = ({ calendar }) => {
 
@@ -19,7 +19,7 @@ const MonthCalendarGrid = ({ calendar }) => {
                 {calendar.map((item, index) => (
                     <Popover key={index}>
                         <PopoverTrigger asChild>
-                            <div className={`flex border-t border-content2 p-2 cursor-pointer w-full h-full ${!item.isCurrentMonth && 'text-content2'}`}>
+                            <div className={`flex border-t border-foreground2 p-2 cursor-pointer w-full h-full ${!item.isCurrentMonth && 'text-content2'}`}>
                                 <div className="text-small font-bold">
                                     {item.day}
                                     {item.data && item.data.map((data, index) =>
