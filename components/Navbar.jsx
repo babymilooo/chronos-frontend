@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ModeToggle } from './ThemeSwitcher';
 import {
     Popover as MyPopover,
@@ -9,11 +9,30 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 import Link from 'next/link';
 import { Button } from './ui/button';
-import Router from 'next/router';
+// import { useRouter } from 'next/router';
+// import UserService from '@/app/services/UserService';
 
 const Navbar = () => {
+    // const router = useRouter();
     const rootStore = useContext(RootStoreContext);
     const { userStore, holidaysStore } = rootStore;
+
+    // useEffect(() => {
+    //     const { id } = router.query;
+
+    //     const fetchUser = async () => {
+    //         if (id) {
+    //             try {
+    //                 const userData = await UserService.getUser(id);
+    //                 userStore.setUser(userData);
+    //             } catch (error) {
+    //                 console.error('Error fetching user data:', error);
+    //             }
+    //         }
+    //     }
+
+    //     fetchUser();
+    // }, [userStore.user]);
 
     const handleLogout = async () => {
         await userStore.logout();
@@ -21,54 +40,58 @@ const Navbar = () => {
     }
 
     return (
-        <nav
-            className="relative flex w-full flex-wrap items-center justify-between bg-background text-foreground border-b border-foreground2 lg:py-2">
-            <div className="flex w-full flex-wrap items-center justify-between px-3">
-                <div onClick={() => { Router.push('/calendar') }} className="cursor-pointer mx-2 my-1 flex items-center lg:mb-0 lg:mt-0 ">
-                    <img
-                        className="me-2 bg-white rounded-xl border-2 border-solid border-black"
-                        src="images/logo.svg"
-                        style={{ height: '40px' }} // Corrected style attribute
-                        alt="TE Logo"
-                        loading="lazy" />
-                    <h1 className="text-xl font-bold">Calendar</h1>
-                </div>
-                <div className="ms-2 flex gap-4 mr-8">
-                    <ModeToggle />
-                    <div className='rounded-t-3xl'>
-                        <MyPopover>
-                            <MyPopoverTrigger asChild>
-                                <Avatar className="cursor-pointer">
-                                    <AvatarImage src={userStore.user.image} />
-                                    <AvatarFallback>CN</AvatarFallback>
-                                </Avatar>
-                            </MyPopoverTrigger>
-                            <MyPopoverContent className="w-auto p-0 rounded-3xl border" align="start">
-                                <div>
-                                    <div className="flex items-center bg-background2 rounded-t-3xl border-b border-foreground2 p-4">
-                                        <Avatar>
-                                            <AvatarImage src={userStore.user.image} />
-                                            <AvatarFallback>CN</AvatarFallback>
-                                        </Avatar>
-                                        <div className="ml-2">
-                                            <p className="font-bold text-lg">{userStore.user.username}</p>
-                                            <p className="text-neutral-500">{userStore.user.email}</p>
-                                        </div>
-                                    </div>
-                                    <div className="m-4">
-                                        <Link href="/users/friends" className="block mb-2">Friends</Link>
-                                        <Link href="/users/settings" className="block mb-2">Settings</Link>
-                                        <Button
-                                            className="w-full"
-                                            onClick={handleLogout}
-                                        >
-                                            Log Out
-                                        </Button>
-                                    </div>
-                                </div>
-                            </MyPopoverContent>
-                        </MyPopover>
+        <nav className="relative flex w-full flex-wrap items-center justify-between bg-background text-foreground border-b border-foreground2 lg:py-2 px-4 lg:px-8">
+            <div className="flex w-full flex-wrap items-center justify-between">
+                <Link href="/calendar" passHref>
+                    <div className="cursor-pointer flex items-center">
+                        <img
+                            className="me-2 bg-white rounded-xl border-2 border-solid border-black"
+                            src="/images/logo.svg"
+                            alt="Calendar Logo"
+                            style={{ height: '40px', width: '40px' }}
+                            loading="lazy"
+                        />
+                        <h1 className="text-xl font-bold">Calendar</h1>
                     </div>
+                </Link>
+                <div className="flex gap-4">
+                    <ModeToggle />
+                    <MyPopover>
+                        <MyPopoverTrigger asChild>
+                            <Avatar className="cursor-pointer">
+                                <AvatarImage src={userStore.user.image} alt="User avatar" />
+                                <AvatarFallback>CN</AvatarFallback> 
+                            </Avatar>
+                        </MyPopoverTrigger>
+                        <MyPopoverContent className="rounded-3xl border border-foreground2 shadow-lg" align="start">
+                            <div className="bg-background2">
+                                <div className="flex items-center rounded-t-3xl p-4">
+                                    <Avatar>
+                                        <AvatarImage src={userStore.user.image} alt="User avatar" />
+                                        <AvatarFallback>CN</AvatarFallback>
+                                    </Avatar>
+                                    <Link href={`/users/${userStore.user.id}`} className="ml-2">
+                                        <p className="font-bold text-lg">{userStore.user.username}</p>
+                                        <p className="text-neutral-500">{userStore.user.email}</p>
+                                    </Link>
+                                </div>
+                                <div className="p-4">
+                                    <Link href={`/users/${userStore.user.id}/friends`} className="block mb-2 text-blue-600 hover:bg-blue-50 hover:text-blue-600 p-2 rounded-md">
+                                        Friends
+                                    </Link>
+                                    <Link href={`/users/${userStore.user.id}/settings`} className="block mb-2 text-blue-600 hover:bg-blue-50 hover:text-blue-600 p-2 rounded-md">
+                                        Settings
+                                    </Link>
+                                    <Button
+                                        className="w-full text-red-600 hover:bg-red-50 hover:text-red-600 p-2 rounded-md"
+                                        onClick={handleLogout}
+                                    >
+                                        Log Out
+                                    </Button>
+                                </div>
+                            </div>
+                        </MyPopoverContent>
+                    </MyPopover>
                 </div>
             </div>
         </nav>
