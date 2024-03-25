@@ -1,8 +1,8 @@
 import { toast, Bounce } from 'react-toastify';
 
-const ToastService = (error) => {
+const ToastService = (error, customStatus = 500) => {
     const message = error.response?.data?.message || error.message;
-    const status = error.response?.status;
+    const status = customStatus === 500 ? error.response?.status : customStatus;
 
     if ([400, 401, 402, 403, 404, 500].includes(status)) {
         toast.error(message, {
