@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-
+import { format } from "date-fns"
 import { CalendarIcon } from "@radix-ui/react-icons"
+import { cn } from "@/lib/utils"
 
 import {
     Popover,
@@ -10,10 +11,10 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 
-function DatePicker({ cn, date, format, setDate }) {
+function DatePicker({ date, setDate }) {
     return (<Popover>
         <PopoverTrigger asChild>
-            <Button variant={"outline"} className={cn("w-[200px] justify-start text-left font-normal", !date && "text-muted-foreground")}>
+            <Button variant={"outline"} className={cn("w-[240px] justify-start text-left font-normal", !date && "text-muted-foreground")}>
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {date ? format(date, "PPP") : <span>Pick a date</span>}
             </Button>

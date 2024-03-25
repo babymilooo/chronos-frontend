@@ -2,7 +2,7 @@ import CalendarUtils from '@/app/utils/calendar-utils';
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 
-const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, mergedCalendar, active, setActive }) => {
+const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, setDayCalendar, setDate, mergedCalendar, active, setActive }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const monthNames = ["December", "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"];
@@ -12,17 +12,47 @@ const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, mergedCalendar,
     const currentYear = currentDate.getFullYear();
 
     const goToPrevious = () => {
-        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1);
+        console.log("goToPrevious", active);
+        let newDate;
+        switch (active) {
+            case 'day':
+                newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 1);
+                break;
+            case 'week':
+                newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 7);
+                break;
+            case 'month':
+            default:
+                newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1);
+                break;
+        }
+        console.log(newDate);
         setCurrentDate(newDate);
+        setDate(newDate);
         // Here call the function to update the calendar grid
-        updateCalendarGrid(newDate);
+        CalendarUtils.updateCalendarGrid(newDate, mergedCalendar, setMonthCalendar, setWeekCalendar, setDayCalendar);
     };
 
     const goToNext = () => {
-        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1);
+        console.log("goToNext", active);
+        let newDate;
+        switch (active) {
+            case 'day':
+                newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
+                break;
+            case 'week':
+                newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 7);
+                break;
+            case 'month':
+            default:
+                newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1);
+                break;
+        }
+        console.log(newDate);
         setCurrentDate(newDate);
+        setDate(newDate);
         // Here call the function to update the calendar grid
-        updateCalendarGrid(newDate);
+        CalendarUtils.updateCalendarGrid(newDate, mergedCalendar, setMonthCalendar, setWeekCalendar, setDayCalendar);
     };
 
     const goToToday = () => {
@@ -31,24 +61,10 @@ const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, mergedCalendar,
         console.log(today.toString());
 
         setCurrentDate(today);
+        setDate(today);
         // Here call the function to update the calendar grid
-        updateCalendarGrid(today);
+        CalendarUtils.updateCalendarGrid(today, mergedCalendar, setMonthCalendar, setWeekCalendar, setDayCalendar);
     };
-
-    async function updateCalendarGrid(date) {
-        // Assuming mergedCalendar comes from your state or props
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1;
-
-        // Update the month calendar grid
-        const monthCalendarGrid = CalendarUtils.getCalendarGrid(year, month, mergedCalendar);
-        setMonthCalendar(monthCalendarGrid);
-
-        // Update the week calendar grid
-        const weekNumber = CalendarUtils.getCurrentWeekNumber(year, month);
-        const weekCalendarGrid = CalendarUtils.getWeekCalendarGrid(monthCalendarGrid, weekNumber);
-        setWeekCalendar(weekCalendarGrid);
-    }
 
     return (
         <div className="flex justify-between items-center mb-4">
