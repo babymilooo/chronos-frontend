@@ -1,5 +1,6 @@
 import $api from '../https/axios';
 import { API_URL } from '../https/axios';
+import ToastService from './ToastService';
 
 export default class UserService {
     static async getUser(id) {
@@ -31,7 +32,7 @@ export default class UserService {
 
     static async getFriends(id) {
         try {
-            const response = await $api.get(`${API_URL}/users/friends`, { id: id });
+            const response = await $api.get(`${API_URL}/users/${id}/friends`);
             return response.data;
         } catch (e) {
             console.error(e.response?.data?.message);
@@ -46,4 +47,13 @@ export default class UserService {
             console.error(e.response?.data?.message);
         }
     }
+
+    static async updateUser(id, formData) {
+        try {
+            const response = await $api.put(`${API_URL}/users/${id}/update`, formData);
+            return response.data;
+        } catch (e) {
+            ToastService(e.response?.data?.message);
+        }
+    }    
 }
