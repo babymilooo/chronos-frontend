@@ -22,7 +22,6 @@ const calendar = () => {
     const [day, setDay] = useState([]);
     const [active, setActive] = useState('month');
     const [calendar, setCalendar] = useState([]);
-    const [events, setEvents] = useState([]);
     // Get the name of the current month using the currentMonth state
 
     // This is just a placeholder function to update the month's calendar grid.
@@ -60,7 +59,7 @@ const calendar = () => {
                 if (!holidaysStore.isLoading && calendar.length === 0) {
                     const holidaysData = holidaysStore.holidays.map(holiday => ({ ...holiday }));
                     const eventsData = await getEvents(userStore.user.id);
-                    setEvents(eventsData);
+
                     const eventsDataWithDateTime = await EventsUtils.eventsDataWithDateTime(eventsData);
                     // Merge events and holidays into one array
                     const mergedCalendar = holidaysData.map(holiday => ({ data: { ...holiday }, type: 'holiday' }))
@@ -80,11 +79,18 @@ const calendar = () => {
 
     }, [userStore.isLoading, holidaysStore.holidays]);
 
-    useEffect(() => {
-        async function updateGrids() {
+    const handleUpdate = async () => {
+        const holidaysData = holidaysStore.holidays.map(holiday => ({ ...holiday }));
+        const eventsData = await getEvents(userStore.user.id);
 
-        }
-    }, [events]);
+        const eventsDataWithDateTime = await EventsUtils.eventsDataWithDateTime(eventsData);
+        // Merge events and holidays into one array
+        const mergedCalendar = holidaysData.map(holiday => ({ data: { ...holiday }, type: 'holiday' }))
+            .concat(eventsDataWithDateTime.map(event => ({ data: { ...event }, type: 'event' })));
+        // Create the calendar grid
+        setCalendar(mergedCalendar);
+        await CalendarUtils.updateCalendarGrid(date, mergedCalendar, updateMonthCalendar, updateWeekCalendar, updateDayCalendar);
+    };
 
     if (loading) {
         console.log("Loading...");
@@ -102,9 +108,9 @@ const calendar = () => {
                 <div className="w-5/6 overflow-auto p-4"> {/* Main content */}
                     <CalendarNavigation setMonthCalendar={updateMonthCalendar} setWeekCalendar={updateWeekCalendar} setDayCalendar={updateDayCalendar} setDate={setDate} mergedCalendar={calendar} active={active} setActive={handleSetActive} />
                     {active === 'month' ? (
-                        <MonthCalendarGrid calendar={monthCalendar} />
+                        <MonthCalendarGrid calendar={monthCalendar} handleUpdate={handleUpdate} />
                     ) : active === 'week' ? (
-                        <WeekCalendarGrid week={week} date={date} />
+                        <WeekCalendarGrid week={week} date={date} handleUpdate={handleUpdate} />
                     ) : active === 'day' ? (
                         <div className="grid grid-cols-7 gap-1">
                             {week.map((item, index) => (

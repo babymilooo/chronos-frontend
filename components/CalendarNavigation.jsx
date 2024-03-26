@@ -1,7 +1,8 @@
 import CalendarUtils from '@/app/utils/calendar-utils';
 import React, { useState } from 'react';
 import { Button } from './ui/button';
-
+import { ChevronRightIcon } from "@radix-ui/react-icons"
+import { ChevronLeftIcon } from "@radix-ui/react-icons"
 const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, setDayCalendar, setDate, mergedCalendar, active, setActive }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const monthNames = ["December", "January", "February", "March", "April", "May", "June",
@@ -100,14 +101,14 @@ const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, setDayCalendar,
             </div>
 
             <div className="flex justify-between items-center mr-10">
-                <Button variant="ghost" onClick={goToPrevious}>
-                    <img src="images/chevrons/chevron-left.svg" className="p-2" />
+                <Button variant="ghost" size="icon" className="text-red-500" onClick={goToPrevious}>
+                    <ChevronLeftIcon className="h-4 w-4" />
                 </Button>
                 <Button variant="ghost" className="text-red-500" onClick={goToToday}>
                     Today
                 </Button>
-                <Button variant="ghost" onClick={goToNext}>
-                    <img src="images/chevrons/chevron-right.svg" className="p-2" />
+                <Button variant="ghost" size="icon" className="text-red-500" onClick={goToNext}>
+                    <ChevronRightIcon className="h-4 w-4" />
                 </Button>
             </div>
         </div>

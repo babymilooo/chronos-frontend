@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { format } from "date-fns"
 
 import EventsUtils from '@/app/utils/events-utils';
@@ -11,11 +11,13 @@ import {
     PopoverTrigger as MyPopoverTrigger
 } from '@/components/MyPopover';
 
+
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 
 import { CreateNewEvent } from '../CreateNewEvent';
+import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 
 const getCurrentTimeOffset = () => {
     const now = new Date();
@@ -27,13 +29,14 @@ const getCurrentTimeOffset = () => {
 };
 
 
-const WeekCalendarGrid = ({ week, date }) => {
+
+const WeekCalendarGrid = ({ week, handleUpdate }) => {
+    const rootStore = useContext(RootStoreContext);
+    const { userStore } = rootStore;
     const hoursInDay = 24;
     const slotsPerHour = 2; // 15-minute intervals
     const totalSlots = hoursInDay * slotsPerHour;
     const [currentTimeOffset, setCurrentTimeOffset] = useState(getCurrentTimeOffset());
-    const [startDate, setStartDate] = useState()
-    const [endDate, setEndDate] = useState()
     useEffect(() => {
         // Update the indicator's position every minute
         const intervalId = setInterval(() => {
@@ -52,8 +55,7 @@ const WeekCalendarGrid = ({ week, date }) => {
     });
 
     const groupedEvents = EventsUtils.groupEventsByDate(week);
-    console.log(groupedEvents);
-    console.log(timeSlots);
+
     return (
         <div className="grid grid-cols-[50px_repeat(7,_1fr)] w-full relative border-content2 border">
             {/* Time slots column */}
@@ -61,7 +63,6 @@ const WeekCalendarGrid = ({ week, date }) => {
                 <div className="flex justify-end items-center p-2 text-bkg">1</div>
                 {timeSlots.map((time, index) => (
                     <div key={index} className="flex justify-end items-top h-[50px] font-bold pr-1">
-                        {/* {time.minute === '00' ? time.hour : ''} */}
                         {time.hour + ':' + time.minute}
                     </div>
                 ))}
@@ -77,18 +78,7 @@ const WeekCalendarGrid = ({ week, date }) => {
                         {/* Empty slots for each 30-minute interval in a day */}
                         <div className="relative z-10">
                             {timeSlots.map((time, timeIndex) => (
-                                <Dialog key={timeIndex}>
-                                    <DialogTrigger asChild>
-                                        <div className="border-l border-t border-content2 p-2 h-[50px] w-full z-2 hover:bg-background2"></div>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            <DialogTitle className="text-3xl font-bold">New Event</DialogTitle>
-                                        </DialogHeader>
-                                        <CreateNewEvent date={dayData.dateStr} time={time} />
-                                    </DialogContent>
-                                </Dialog>
-
+                                <CreateNewEvent key={timeIndex} date={dayData.dateStr} time={time} id={userStore.user.id} handleUpdate={handleUpdate} />
                             ))}
                         </div>
 
