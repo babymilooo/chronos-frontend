@@ -77,19 +77,16 @@ const Navbar = () => {
                             </Link>
 
                             <div className="p-4">
-                                <Link href={`/users/${userStore.user.id}/friends`} className="block mb-2 hover:bg-background2 p-2 rounded-md">
+                                <Link href={`/users/${userStore.user.id}/friends`} className="block mb-2 hover:bg-background2 p-3 rounded-lg">
                                     Friends
                                 </Link>
-                                <Link href={`/users/${userStore.user.id}/settings`} className="block mb-2 hover:bg-background2 p-2 rounded-md">
+                                <Link href={`/users/${userStore.user.id}/settings`} className="block mb-2 hover:bg-background2 p-3 rounded-lg">
                                     Settings
                                 </Link>
-                                <Button
-                                    className="w-full p-2 rounded-md hover:bg-red-500 hover:text-foreground2"
-                                    onClick={handleLogout}
-                                    variant="ghost"
-                                >
-                                    Log Out
-                                </Button>
+
+                                <div onClick={handleLogout} className="flex items-start w-full mb-2 hover:bg-red-500 hover:text-white p-3 rounded-lg">
+                                    Logout
+                                </div>
                             </div>
 
                         </MyPopoverContent>
