@@ -30,6 +30,26 @@ export default class UserService {
         }
     }
 
+    static async addFriend(id) {
+        try {
+            console.log('addFriend', id);
+            const response = await $api.post(`${API_URL}/users/add-friend/${id}`);
+            return response.data;
+        } catch (e) {
+            console.error(e.response?.data?.message);
+        }
+    }
+
+    static async removeFriend(id) {
+        try {
+            console.log('removeFriend', id);
+            const response = await $api.delete(`${API_URL}/users/remove-friend/${id}`);
+            return response.data;
+        } catch (e) {
+            console.error(e.response?.data?.message);
+        }
+    }
+
     static async getFriends(id) {
         try {
             const response = await $api.get(`${API_URL}/users/${id}/friends`);
@@ -42,7 +62,7 @@ export default class UserService {
     static async isFriend(id) {
         try {
             const response = await $api.get(`${API_URL}/users/${id}/isfriend`);
-            return response.data;
+            return response.data.isFriend;
         } catch (e) {
             console.error(e.response?.data?.message);
         }
