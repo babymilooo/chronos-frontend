@@ -2,7 +2,7 @@ import React from 'react';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 
 const ScrollArea = React.forwardRef(({ children, ...props }, forwardedRef) => (
-    <ScrollAreaPrimitive.Root {...props} ref={forwardedRef} style={{ height: '70vh', width: '100%', overflow: 'hidden' }}>
+    <ScrollAreaPrimitive.Root {...props} ref={forwardedRef} style={{ minHeight: '0', maxHeight: '65vh', width: '100%', overflow: 'hidden' }}>
         <ScrollAreaPrimitive.Viewport style={{ width: '100%', height: '100%', borderRadius: 'inherit' }}>
             {children}
         </ScrollAreaPrimitive.Viewport>
