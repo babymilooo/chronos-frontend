@@ -10,8 +10,9 @@ import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 import Link from 'next/link';
 import Router from 'next/router';
 import UserService from '@/app/services/UserService';
+import { observer } from 'mobx-react-lite';
 
-const Navbar = () => {
+const Navbar = observer(() => {
     const rootStore = useContext(RootStoreContext);
     const { userStore, holidaysStore } = rootStore;
     const id = userStore.user.id;
@@ -70,6 +71,6 @@ const Navbar = () => {
             </div>
         </nav >
     );
-};
+});
 
 export default Navbar;

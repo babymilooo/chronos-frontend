@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { set } from 'lodash';
 
 const UserPage = () => {
     const router = useRouter();
@@ -18,35 +19,61 @@ const UserPage = () => {
         email: null,
         bio: null,
         image: null,
-        friends: null
     });
     const [loading, setLoading] = useState(true);
     const [isFriend, setIsFriend] = useState(false);
+    const [friends, setFriends] = useState([]);
     const isOwnProfile = (user.id === userStore.user.id);
 
+    const fetchUser = async () => {
+        try {
+            const userData = await UserService.getUser(id);
+            setUser(userData);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
+    const fetchIsFriend = async () => {
+        try {
+            const pageOfFriend = await UserService.isFriend(id);
+            setIsFriend(pageOfFriend);
+        } catch (error) {
+            console.error('Error fetching friend data:', error);
+        }
+    };
+
+    const fetchFriends = async () => {
+        try {
+            let friendsList = await UserService.getFriends(id);
+            friendsList.filter(friend => friend.id !== userStore.user.id);
+            friendsList.sort((a, b) => a.name.localeCompare(b.name));
+            setFriends(friendsList);
+        } catch (error) {
+            console.error('Error getting friends:', error);
+        }
+    };
+
     useEffect(() => {
-        const fetchUser = async () => {
-            if (id) {
-                try {
-                    const pageOfFriend = await UserService.isFriend(id);
-                    setIsFriend(pageOfFriend);
-                    const userData = await UserService.getUser(id);
-                    setUser(userData);
-                    let friendsList = await UserService.getFriends(id);
-                    friendsList.sort((a, b) => a.name.localeCompare(b.name));
-                    setUser(prevState => ({ ...prevState, friends: friendsList }));
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
-                } finally {
-                    setLoading(false);
-                }
-            }
-        };
-        fetchUser();
+        setLoading(true);
+        
+        if (id) {
+            fetchUser();
+        }
+
+        fetchFriends();
+        fetchIsFriend();
+        setLoading(false);
     }, [router.query]);
 
-    const handleRemoveFriend = async (friendId) => {
-        console.log(`Attempting to remove friend with ID: ${friendId}`);
+    const handleActionFriend = async (friendId, isFriend, e) => {
+        if (isFriend) {
+            await UserService.removeFriend(friendId);
+        } else {
+            await UserService.addFriend(friendId);
+        }
+        fetchFriends();
+        fetchIsFriend();
     };
 
     if (loading) {
@@ -92,10 +119,14 @@ const UserPage = () => {
                                     <Link href={`/users/${user.id}/settings`} passHref>
                                         <Button variant="ghost" className="w-full">Edit Profile</Button>
                                     </Link>
+                                ) : isFriend ? (
+                                    <div onClick={() => handleActionFriend(user.id, true)} variant="ghost" className="flex justify-center items-center w-full hover:bg-red-500 mb-2 hover:text-white p-3 rounded-lg">
+                                        Remove Friend
+                                    </div>
                                 ) : (
-                                    <Button variant="ghost" onClick={() => handleActionFriend(user.id, user.isCurrentUserFriend)} className="w-full ">
-                                        {isFriend ? 'Remove Friend' : 'Add Friend'}
-                                    </Button>
+                                    <div onClick={() => handleActionFriend(user.id, false)} variant="ghost" className="flex justify-center items-center w-full hover:bg-green-500 mb-2 hover:text-white p-3 rounded-lg">
+                                        Add Friend
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -103,21 +134,31 @@ const UserPage = () => {
                     <div className="w-full lg:w-2/3">
                         <div className="border border-foreground2 bg-background shadow-xl rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-neutral-500 mb-4">Friends</h3>
-                            {user.friends?.length > 0 ? (
+                            {friends?.length > 0 ? (
                                 <ScrollArea>
                                     <div className="space-y-2">
-                                        {user.friends.map(friend => (
-                                            <Link key={friend.id} href={`/users/${friend.id}`} passHref className='cursor-grab'>
-                                                <div className="flex mb-4 items-center justify-between border rounded-lg p-2">
+                                        {friends.map(friend => (
+                                            <div className="flex mb-4 items-center justify-between border rounded-lg p-2">
+                                                <Link key={friend.id} href={`/users/${friend.id}`} passHref className='cursor-grab'>
                                                     <div className="flex items-center gap-4">
                                                         <img src={friend.image} alt={friend.name} className="h-10 w-10 rounded-full object-cover" />
                                                         <div className="text-sm font-medium">{friend.name}</div>
                                                     </div>
-                                                    <button onClick={() => handleRemoveFriend(friend.id)} className="hover:bg-red-500 hover:text-white p-2 rounded-lg cursor-pointer">
-                                                        Remove Friend
-                                                    </button>
+                                                </Link>
+                                                <div>
+                                                    {userStore.user.id === friend.id ? (
+                                                        <></>
+                                                    ) : friend.isFriend ? (
+                                                        <div onClick={() => handleActionFriend(friend.id, true)} variant="ghost" className="w-full hover:bg-red-500 mb-2 hover:bg-red-500 hover:text-white p-3 rounded-lg">
+                                                            Remove Friend
+                                                        </div>
+                                                    ) : (
+                                                        <div onClick={() => handleActionFriend(friend.id, false)} variant="ghost" className="w-full hover:bg-green-500 mb-2 hover:bg-red-500 hover:text-white p-3 rounded-lg">
+                                                            Add Friend
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            </Link>
+                                            </div>
                                         ))}
                                     </div>
                                 </ScrollArea>
