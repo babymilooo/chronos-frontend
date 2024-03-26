@@ -8,32 +8,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 import Link from 'next/link';
-import { Button } from './ui/button';
 import Router from 'next/router';
-// import { useRouter } from 'next/router';
-// import UserService from '@/app/services/UserService';
+import UserService from '@/app/services/UserService';
 
 const Navbar = () => {
-    // const router = useRouter();
     const rootStore = useContext(RootStoreContext);
     const { userStore, holidaysStore } = rootStore;
-
-    // useEffect(() => {
-    //     const { id } = router.query;
-
-    //     const fetchUser = async () => {
-    //         if (id) {
-    //             try {
-    //                 const userData = await UserService.getUser(id);
-    //                 userStore.setUser(userData);
-    //             } catch (error) {
-    //                 console.error('Error fetching user data:', error);
-    //             }
-    //         }
-    //     }
-
-    //     fetchUser();
-    // }, [userStore.user]);
+    const id = userStore.user.id;
 
     const handleLogout = async () => {
         await userStore.logout();
@@ -59,18 +40,12 @@ const Navbar = () => {
                     <ModeToggle />
                     <MyPopover>
                         <MyPopoverTrigger asChild>
-                            <Avatar className="cursor-pointer">
-                                <AvatarImage src={userStore.user.image} alt="User avatar" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
+                            <img src={`http://localhost:5001/api/user/avatar/${userStore.user.image}`} alt={userStore.user.name} className="h-10 w-10 rounded-full object-cover" />
                         </MyPopoverTrigger>
-                        <MyPopoverContent className="rounded-3xl border border-foreground2 shadow-lg" align="start">
+                        <MyPopoverContent className="rounded-3xl border border-foreground2 shadow-lg mr-8" align="start">
                             <Link href={`/users/${userStore.user.id}`} className="flex items-center bg-background2 rounded-t-3xl border-b border-foreground2 p-4">
-                                <Avatar>
-                                    <AvatarImage src={userStore.user.image} />
-                                    <AvatarFallback>CN</AvatarFallback>
-                                </Avatar>
-                                <div>
+                                <img src={`http://localhost:5001/api/user/avatar/${userStore.user.image}`} alt={userStore.user.name} className="h-10 w-10 rounded-full object-cover" />
+                                <div className='ml-3'>
                                     <p className="font-bold text-lg">{userStore.user.username}</p>
                                     <p className="text-neutral-500">{userStore.user.email}</p>
                                 </div>
