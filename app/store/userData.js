@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import AuthService from '../services/AuthService';
 import Router from 'next/router';
+import UserService from '../services/UserService';
 
 class UserStore {
     user = {
@@ -13,6 +14,7 @@ class UserStore {
     isLoading = true;
     currentYear = (new Date()).getFullYear();
 
+    friends = [];
 
     constructor(user, rootStore) {
         this.rootStore = rootStore;
@@ -36,15 +38,22 @@ class UserStore {
         this.isLoading = isLoading;
     }
 
+    setFriends(friends) {
+        this.friends = friends;
+    }
+
     async checkAuth() {
         try {
             const response = await AuthService.chechAuth();
             runInAction(() => {
                 console.log("render");
                 this.setUser(response.data.user);
-                this.setIsLoading(false);
-                localStorage.setItem('accesstoken', response.data.accessToken);
             });
+            // const friends = await UserService.getFriends(response.data.user.id);
+            const friends = await UserService.getUsers(response.data.user.id);
+            this.setFriends(friends);
+            this.setIsLoading(false);
+            localStorage.setItem('accesstoken', response.data.accessToken);
         } catch (e) {
             if (e?.response?.status === 401) { // Use optional chaining to access properties
                 await Router.push('/login');

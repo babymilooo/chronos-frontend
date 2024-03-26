@@ -26,11 +26,11 @@ export default class CalendarService {
         }
     }
 
-    static async createEvent(title, startDate, endDate, startTime, endTime, coOwners = [], attendees = [], user) {
+    static async createEvent(title, startDate, endDate, startTime, endTime, eventType, repeat, priority, coOwners = [], attendees = [], user) {
         try {
             console.log('createEvent');
-            console.log(title, startDate, endDate, startTime, endTime, coOwners, attendees, user);
-            await $api.post(`${API_URL}/events`, { title, startDate, endDate, startTime, endTime, user, coOwners, attendees });
+            console.log(title, startDate, endDate, startTime, endTime, eventType, repeat, priority, coOwners, attendees, user);
+            await $api.post(`${API_URL}/events`, { title, startDate, endDate, startTime, endTime, eventType, repeat, priority, coOwners, attendees, user });
             return true;
         } catch (error) {
             console.error('Произошла ошибка при создании события:', error);

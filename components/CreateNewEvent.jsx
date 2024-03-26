@@ -3,7 +3,6 @@ import { Label } from "./ui/label";
 import DatePicker from "./DatePicker";
 import MyTimePicker from "./TimePicker";
 import { Input } from "./ui/input";
-
 import {
     Select,
     SelectContent,
@@ -26,10 +25,14 @@ import {
 
 import { Button } from "./ui/button";
 import CalendarService from "@/app/services/CalendarService";
+import UserService from "@/app/services/UserService";
+import { RootStoreContext } from "@/app/provider/rootStoreProvider";
+import { DataTable } from "./DataTable";
+import SelectUsers from "./SelectUsers";
 
 
 
-export const CreateNewEvent = ({ date, time, id, handleUpdate, key }) => {
+export const CreateNewEvent = ({ date, time, id, handleUpdate, timeIndex, friends }) => {
 
     const [startDate, setStartDate] = useState(date);
     const [startTime, setStartTime] = useState(`${time.hour}:${time.minute}`);
@@ -66,21 +69,28 @@ export const CreateNewEvent = ({ date, time, id, handleUpdate, key }) => {
             description
         };
         // Обработайте formData, например, отправьте на сервер или выведите в консоль
-        // const formatedStartDate = formatedDate(startDate);
-        // const formatedEndDate = formatedDate(endDate);
+        const formatedStartDate = formatedDate(startDate);
+        const formatedEndDate = formatedDate(endDate);
 
-        // const result = await CalendarService.createEvent(title, formatedStartDate, formatedEndDate, startTime, endTime, coOwners, attendees, id);
-        // if (result) {
-        //     handleUpdate();
-        // } else {
-        //     console.error('Ошибка создания события');
-        // }
+        const result = await CalendarService.createEvent(title, formatedStartDate, formatedEndDate, startTime, endTime, eventType,repeat, priority, coOwners, attendees, id);
+        if (result) {
+            handleUpdate();
+        } else {
+            console.error('Ошибка создания события');
+        }
         console.log(formData);
     };
 
+    const availableForCoOwners = friends.filter(
+        (friend) => !attendees.includes(friend.value)
+    );
+    const availableForAttendees = friends.filter(
+        (friend) => !coOwners.includes(friend.value)
+    );
+
     return (
         <>
-            <Dialog key={key}>
+            <Dialog key={timeIndex}>
                 <DialogTrigger asChild>
                     <div className="border-l border-t border-content2 p-2 h-[50px] w-full z-2 hover:bg-background2"></div>
                 </DialogTrigger>
@@ -149,6 +159,10 @@ export const CreateNewEvent = ({ date, time, id, handleUpdate, key }) => {
                                     </SelectContent>
                                 </Select>
                             </div>
+                        </div>
+                        <div className="grid grid-cols-2 items-center gap-2">
+                            <SelectUsers users={availableForCoOwners} setUsers={setCoOwners} className="col-span-1" />
+                            <SelectUsers users={availableForAttendees} setUsers={setAttendees} className="col-span-1" />
                         </div>
                         {/* Дополнительные поля Select можно раскомментировать и настроить аналогичным образом */}
                         <DialogClose asChild>

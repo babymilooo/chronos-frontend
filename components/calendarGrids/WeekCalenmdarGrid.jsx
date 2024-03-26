@@ -33,9 +33,6 @@ const getCurrentTimeOffset = () => {
 const WeekCalendarGrid = ({ week, handleUpdate }) => {
     const rootStore = useContext(RootStoreContext);
     const { userStore } = rootStore;
-    const hoursInDay = 24;
-    const slotsPerHour = 2; // 15-minute intervals
-    const totalSlots = hoursInDay * slotsPerHour;
     const [currentTimeOffset, setCurrentTimeOffset] = useState(getCurrentTimeOffset());
     useEffect(() => {
         // Update the indicator's position every minute
@@ -48,6 +45,9 @@ const WeekCalendarGrid = ({ week, handleUpdate }) => {
     }, []);
 
     // This creates an array for the 24 hours broken into 15-minute slots
+    const hoursInDay = 24;
+    const slotsPerHour = 2; // 15-minute intervals
+    const totalSlots = hoursInDay * slotsPerHour;
     const timeSlots = Array.from({ length: totalSlots }, (_, index) => {
         const hour = String(Math.floor(index / slotsPerHour)).padStart(2, '0');
         const minute = String((index % slotsPerHour) * 30).padStart(2, '0'); // adjust to 30 or 15 depending on your needs
@@ -55,6 +55,15 @@ const WeekCalendarGrid = ({ week, handleUpdate }) => {
     });
 
     const groupedEvents = EventsUtils.groupEventsByDate(week);
+    const friends = userStore.friends.users.map((user) => {
+        return {
+            value: user.id,
+            label: user.username,
+            avatarUrl: user.image,
+            email: user.email
+        };
+    });
+
 
     return (
         <div className="grid grid-cols-[50px_repeat(7,_1fr)] w-full relative border-content2 border">
@@ -78,7 +87,7 @@ const WeekCalendarGrid = ({ week, handleUpdate }) => {
                         {/* Empty slots for each 30-minute interval in a day */}
                         <div className="relative z-10">
                             {timeSlots.map((time, timeIndex) => (
-                                <CreateNewEvent key={timeIndex} date={dayData.dateStr} time={time} id={userStore.user.id} handleUpdate={handleUpdate} />
+                                <CreateNewEvent timeIndex={timeIndex} date={dayData.dateStr} time={time} id={userStore.user.id} handleUpdate={handleUpdate} friends={friends} />
                             ))}
                         </div>
 
