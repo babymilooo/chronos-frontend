@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { set } from 'lodash';
 
 const UserPage = () => {
     const router = useRouter();
@@ -18,32 +19,51 @@ const UserPage = () => {
         email: null,
         bio: null,
         image: null,
-        friends: null
     });
     const [loading, setLoading] = useState(true);
     const [isFriend, setIsFriend] = useState(false);
+    const [friends, setFriends] = useState([]);
     const isOwnProfile = (user.id === userStore.user.id);
 
+    const fetchUser = async () => {
+        try {
+            const userData = await UserService.getUser(id);
+            setUser(userData);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
+    const fetchIsFriend = async () => {
+        try {
+            const pageOfFriend = await UserService.isFriend(id);
+            setIsFriend(pageOfFriend);
+        } catch (error) {
+            console.error('Error fetching friend data:', error);
+        }
+    };
+
+    const fetchFriends = async () => {
+        try {
+            let friendsList = await UserService.getFriends(id);
+            friendsList.filter(friend => friend.id !== userStore.user.id);
+            friendsList.sort((a, b) => a.name.localeCompare(b.name));
+            setFriends(friendsList);
+        } catch (error) {
+            console.error('Error getting friends:', error);
+        }
+    };
+
     useEffect(() => {
-        const fetchUser = async () => {
-            if (id) {
-                try {
-                    const pageOfFriend = await UserService.isFriend(id);
-                    setIsFriend(pageOfFriend);
-                    const userData = await UserService.getUser(id);
-                    setUser(userData);
-                    let friendsList = await UserService.getFriends(id);
-                    friendsList.filter(friend => friend.id !== userStore.user.id);
-                    friendsList.sort((a, b) => a.name.localeCompare(b.name));
-                    setUser(prevState => ({ ...prevState, friends: friendsList }));
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
-                } finally {
-                    setLoading(false);
-                }
-            }
-        };
-        fetchUser();
+        setLoading(true);
+        
+        if (id) {
+            fetchUser();
+        }
+
+        fetchFriends();
+        fetchIsFriend();
+        setLoading(false);
     }, [router.query]);
 
     const handleActionFriend = async (friendId, isFriend, e) => {
@@ -52,6 +72,8 @@ const UserPage = () => {
         } else {
             await UserService.addFriend(friendId);
         }
+        fetchFriends();
+        fetchIsFriend();
     };
 
     if (loading) {
@@ -112,10 +134,10 @@ const UserPage = () => {
                     <div className="w-full lg:w-2/3">
                         <div className="border border-foreground2 bg-background shadow-xl rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-neutral-500 mb-4">Friends</h3>
-                            {user.friends?.length > 0 ? (
+                            {friends?.length > 0 ? (
                                 <ScrollArea>
                                     <div className="space-y-2">
-                                        {user.friends.map(friend => (
+                                        {friends.map(friend => (
                                             <div className="flex mb-4 items-center justify-between border rounded-lg p-2">
                                                 <Link key={friend.id} href={`/users/${friend.id}`} passHref className='cursor-grab'>
                                                     <div className="flex items-center gap-4">
