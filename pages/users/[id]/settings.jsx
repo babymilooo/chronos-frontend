@@ -1,11 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
+import { use, useContext, useEffect, useState } from 'react';
 import UserService from '@/app/services/UserService';
 import { useRouter } from 'next/router';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 import Navbar from '@/components/Navbar';
 import ToastService from '@/app/services/ToastService';
+import Link from 'next/link';
 
-const UserPage = () => {
+const SettingsPage = () => {
     const router = useRouter();
     const [user, setUser] = useState({ username: '', email: '', bio: '', image: '' });
     const [isFriend, setIsFriend] = useState(false);
@@ -15,9 +16,9 @@ const UserPage = () => {
     const { userStore } = rootStore;
 
     useEffect(() => {
-        const fetchUser = async () => {
-            const { id } = router.query;
+        const { id } = router.query;
 
+        const fetchUser = async () => {
             if (id) {
                 try {
                     const userData = await UserService.getUser(id);
@@ -31,8 +32,18 @@ const UserPage = () => {
             }
         };
 
+        if (!userStore.user) {
+            ToastService("No user data found");
+            return;
+        }
+
+        if (userStore.user && id !== userStore.user.id) {
+            router.push(`/users/${userStore.user.id}/settings`);
+            ToastService("You cannot edit another user's settings.");
+        }
+
         fetchUser();
-    }, [router.query]);
+    }, [router.query, userStore]);
 
     const handleFileChange = (event) => {
         if (event.target.files && event.target.files[0]) {
@@ -55,8 +66,7 @@ const UserPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
-    
+
         const formData = new FormData();
     
         if (user.imageFile) {
@@ -69,86 +79,78 @@ const UserPage = () => {
     
         try {
             const updatedUser = await UserService.updateUser(user.id, formData);
-            rootStore.userStore.setUser(updatedUser);
-    
+            userStore.setUser(updatedUser);
             ToastService("Profile updated successfully", 200);
+            router.push(`/users/${user.id}`);
         } catch (e) {
             console.error("Error updating user:", e);
             ToastService("Server error while saving changes");
         }
-    
-        setLoading(false);
     };    
     
-    if (loading) {
+    if (loading || !userStore.user) {
         return <div>Loading...</div>;
     }
 
     return (
         <>
             <Navbar />
-            <div className="container mx-auto p-6">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-1 flex flex-col justify-center items-center lg:items-start">
-                        <div className="relative w-48 h-48 bg-gray-200 flex justify-center items-center overflow-hidden rounded-full">
-                            <img
-                                src={user.image}
-                                alt={`${user.username}`}
-                                className="object-cover w-full h-full"
-                            />
-                            <label htmlFor="image-upload" className="absolute inset-0 w-full h-full flex justify-center items-center bg-black bg-opacity-25 cursor-pointer">
-                                <span className="text-white text-sm">Change Image</span>
-                            </label>
-                            <input
-                                id="image-upload"
-                                type="file"
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                onChange={handleFileChange}
-                                style={{ cursor: 'pointer' }}
-                            />
+            <div className="container mx-auto p-4 mt-10">
+                <div className="flex flex-col items-center">
+                    <div className="w-full max-w-2xl shadow overflow-hidden">
+                        <div className="relative overflow-hidden p-6">
+                            <div className="flex justify-center">
+                                <div className="relative w-32 h-32 rounded-full overflow-hidden">
+                                    <img className="object-cover w-full h-full" src={user.image} alt="User avatar" />
+                                    <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 hover:opacity-100">
+                                        <span className="text-white text-lg">Change Image</span>
+                                    </div>
+                                    <input 
+                                        id="image-upload" 
+                                        type="file" 
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                                        onChange={handleFileChange} 
+                                        accept="image/*,video/*,.gif"
+                                    />
+                                </div>
+                            </div>
+                            <div className="mt-6">
+                                <input 
+                                    type="text" 
+                                    value={user.username}
+                                    className="text-lg font-semibold text-gray-800 block w-full bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-indigo-700" 
+                                    onChange={handleUsernameChange} 
+                                    placeholder="Enter username" 
+                                />
+                                <textarea 
+                                    value={user.bio}
+                                    onChange={handleBioChange} 
+                                    className="w-full mt-4 p-2 text-gray-700 bg-gray-200 rounded min-h-[3rem]" 
+                                    placeholder="Your bio"
+                                />
+                            </div>
                         </div>
-                    </div>
-
-                    <div className="lg:col-span-2">
-                    <div className="flex flex-col lg:flex-row gap-4 mb-4">
-                        <div className="flex-1">
-                        <label className="text-gray-600">Username</label>
-                        <input
-                            type="text"
-                            value={user.username}
-                            className="w-full p-2 border border-gray-300 rounded mt-1"
-                            onChange={handleUsernameChange}
-                        />
+                        
+                        <div className="flex justify-between items-center p-4 bg-gray-100">
+                            <Link href="/calendar" passHref>
+                                <span className="text-blue-600 hover:bg-blue-50 hover:text-blue-700 p-2 rounded-md">
+                                    Back to Calendar
+                                </span>
+                            </Link>
+                            <Link href={`/users/${user.id}`} passHref>
+                                <span className="text-blue-600 hover:bg-blue-50 hover:text-blue-700 p-2 rounded-md">
+                                    My Profile
+                                </span>
+                            </Link>
+                            <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Save Changes
+                            </button>
                         </div>
-
-                        <div className="flex-1">
-                        <label className="text-gray-600">Email</label>
-                        <div className="w-full p-2 rounded mt-1">
-                            {user.email}
-                        </div>
-                        </div>
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="text-gray-600">Bio</label>
-                        <textarea
-                        value={user.bio}
-                        className="w-full p-2 border border-gray-300 rounded mt-1"
-                        onChange={handleBioChange}
-                        ></textarea>
-                    </div>
-
-                    <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={handleSubmit}
-                    >
-                        Save Changes
-                    </button>
                     </div>
                 </div>
             </div>
         </>
     );
 };
-
-export default UserPage;
+    
+export default SettingsPage;
