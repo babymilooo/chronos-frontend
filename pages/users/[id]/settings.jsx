@@ -1,49 +1,36 @@
-import { use, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UserService from '@/app/services/UserService';
 import { useRouter } from 'next/router';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
+import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import ToastService from '@/app/services/ToastService';
 import Link from 'next/link';
+import CustomToastContainer from '@/components/CustomToastContainer';
+import { Router } from 'lucide-react';
+import { set } from 'lodash';
 
 const SettingsPage = () => {
     const router = useRouter();
-    const [user, setUser] = useState({ username: '', email: '', bio: '', image: '' });
-    const [isFriend, setIsFriend] = useState(false);
     const [loading, setLoading] = useState(true);
 
     const rootStore = useContext(RootStoreContext);
     const { userStore } = rootStore;
+    const id = userStore.user.id;
+    const { id: idFromQuery } = router.query;
+    const [user, setUser] = useState({
+        ...userStore.user,
+        image: userStore.user.image ? `http://localhost:5001/api/user/avatar/${userStore.user.image}` : null,
+    });
 
     useEffect(() => {
-        const { id } = router.query;
-
-        const fetchUser = async () => {
-            if (id) {
-                try {
-                    const userData = await UserService.getUser(id);
-                    setUser(userData);
-                    const friendStatus = await UserService.isFriend(id);
-                    setIsFriend(friendStatus.isFriend);
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
-                }
-                setLoading(false);
-            }
-        };
-
-        if (!userStore.user) {
-            ToastService("No user data found");
-            return;
+        if (!id) {
+            router.push(`/calendar`);
+        } else if(idFromQuery !== id) {
+            router.push(`/users/${id}/settings`);
         }
-
-        if (userStore.user && id !== userStore.user.id) {
-            router.push(`/users/${userStore.user.id}/settings`);
-            ToastService("You cannot edit another user's settings.");
-        }
-
-        fetchUser();
-    }, [router.query, userStore]);
+        setLoading(false);
+      }, []);
 
     const handleFileChange = (event) => {
         if (event.target.files && event.target.files[0]) {
@@ -65,27 +52,20 @@ const SettingsPage = () => {
     };  
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-
         const formData = new FormData();
-    
-        if (user.imageFile) {
+
+        console.log(user)
+
+        if (user.image) {
             formData.append("image", user.imageFile);
         }
-    
-        formData.append("id", user.id);
+
         formData.append("username", user.username);
         formData.append("bio", user.bio);
-    
-        try {
-            const updatedUser = await UserService.updateUser(user.id, formData);
-            userStore.setUser(updatedUser);
-            ToastService("Profile updated successfully", 200);
-            router.push(`/users/${user.id}`);
-        } catch (e) {
-            console.error("Error updating user:", e);
-            ToastService("Server error while saving changes");
-        }
+
+        const updatedUser = await UserService.updateUser(id, formData);
+        userStore.setUser(updatedUser);
+        ToastService("User data updated successfully", 200);
     };    
     
     if (loading || !userStore.user) {
@@ -95,13 +75,14 @@ const SettingsPage = () => {
     return (
         <>
             <Navbar />
+            <CustomToastContainer />
             <div className="container mx-auto p-4 mt-10">
                 <div className="flex flex-col items-center">
                     <div className="w-full max-w-2xl shadow overflow-hidden">
                         <div className="relative overflow-hidden p-6">
                             <div className="flex justify-center">
                                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                                    <img className="object-cover w-full h-full" src={user.image} alt="User avatar" />
+                                    <img className="object-cover w-full h-full border-2 border-foreground2" src={user.image} alt="User avatar" />
                                     <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 hover:opacity-100">
                                         <span className="text-white text-lg">Change Image</span>
                                     </div>
@@ -118,14 +99,14 @@ const SettingsPage = () => {
                                 <input 
                                     type="text" 
                                     value={user.username}
-                                    className="text-lg font-semibold text-gray-800 block w-full bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-indigo-700" 
+                                    className="text-lg font-semibold text-neutral-500 block w-full bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-indigo-700" 
                                     onChange={handleUsernameChange} 
                                     placeholder="Enter username" 
                                 />
                                 <textarea 
                                     value={user.bio}
                                     onChange={handleBioChange} 
-                                    className="w-full mt-4 p-2 text-gray-700 bg-gray-200 rounded min-h-[3rem]" 
+                                    className="w-full mt-4 block w-full rounded-md bg-background2 p-2 min-h-[3rem]" 
                                     placeholder="Your bio"
                                 />
                             </div>
@@ -133,18 +114,18 @@ const SettingsPage = () => {
                         
                         <div className="flex justify-between items-center p-4 bg-gray-100">
                             <Link href="/calendar" passHref>
-                                <span className="text-blue-600 hover:bg-blue-50 hover:text-blue-700 p-2 rounded-md">
+                                <Button variant="ghost" className="htext-neutral-500 over:bg-gray500 p-3 rounded-lg">
                                     Back to Calendar
-                                </span>
+                                </Button>
                             </Link>
                             <Link href={`/users/${user.id}`} passHref>
-                                <span className="text-blue-600 hover:bg-blue-50 hover:text-blue-700 p-2 rounded-md">
+                                <Button variant="ghost" className="text-neutral-500 hover:bg-gray-500 p-3 rounded-lg">
                                     My Profile
-                                </span>
+                                </Button>
                             </Link>
-                            <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            <Button onClick={handleSubmit} variant="ghost" className="text-neutral-500 hover:bg-gray-500 p-3 rounded-lg">
                                 Save Changes
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>
