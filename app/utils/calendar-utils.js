@@ -9,6 +9,8 @@ class CalendarUtils {
         const weekCalendarGrid = this.getWeekCalendarGrid(calendarGrid, weekNumber);
         setWeek(weekCalendarGrid);
         console.log("weekCalendarGrid", weekCalendarGrid);
+
+        // Get the day calendar grid
     }
 
     static updateCalendarGrid = async (date, mergedCalendar, setMonthCalendar, setWeekCalendar, setDayCalendar) => {
@@ -83,6 +85,9 @@ class CalendarUtils {
         return calendarGrid;
     };
 
+    // static getDayCalendarGrid = (monthCalendarGrid, day) {
+
+    // }
 
     static getWeekCalendarGrid = (monthCalendarGrid, weekNumber) => {
         // Calculate the index range for the desired week
