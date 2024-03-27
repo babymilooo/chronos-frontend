@@ -41,11 +41,11 @@ const Navbar = observer(() => {
                     <ModeToggle />
                     <MyPopover>
                         <MyPopoverTrigger asChild>
-                            <img src={`http://localhost:5001/api/user/avatar/${userStore.user.image}`} alt={userStore.user.name} className="h-10 w-10 rounded-full object-cover" />
+                            <img src={`http://localhost:5001/api/user/avatar/${userStore.user.image || 'default.png'}`} alt={userStore.user.name} className="h-10 w-10 rounded-full object-cover" />
                         </MyPopoverTrigger>
                         <MyPopoverContent className="rounded-3xl border border-foreground2 shadow-lg mr-8" align="start">
                             <Link href={`/users/${userStore.user.id}`} className="flex items-center bg-background2 rounded-t-3xl border-b border-foreground2 p-4">
-                                <img src={`http://localhost:5001/api/user/avatar/${userStore.user.image}`} alt={userStore.user.name} className="h-10 w-10 rounded-full object-cover" />
+                                <img src={`http://localhost:5001/api/user/avatar/${userStore.user.image || 'default.png'}`} alt={userStore.user.name} className="h-10 w-10 rounded-full object-cover" />
                                 <div className='ml-3'>
                                     <p className="font-bold text-lg">{userStore.user.username}</p>
                                     <p className="text-neutral-500">{userStore.user.email}</p>
