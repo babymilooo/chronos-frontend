@@ -8,6 +8,8 @@ import CalendarNavigation from '@/components/CalendarNavigation';
 import Navbar from '@/components/Navbar';
 import MonthCalendarGrid from '@/components/calendarGrids/MonthCalendarGrid';
 import WeekCalendarGrid from '@/components/calendarGrids/WeekCalenmdarGrid';
+import { set } from 'lodash';
+import DayCalendarGrid from '@/components/calendarGrids/DayCalendarGrid';
 
 const calendar = () => {
     const rootStore = useContext(RootStoreContext);
@@ -111,15 +113,8 @@ const calendar = () => {
                     ) : active === 'week' ? (
                         <WeekCalendarGrid week={week} date={date} handleUpdate={handleUpdate} />
                     ) : active === 'day' ? (
-                        <div className="grid grid-cols-7 gap-1">
-                            {week.map((item, index) => (
-                                <div key={index} className="flex justify-center items-center border p-2">
-                                    {item.day} {/* Display the day number */}
-                                    {item.data && <span> - {item.data.name}</span>} {/* Display the data if available */}
-                                </div>
-                            ))}
-                        </div>)
-                        : null
+                        <DayCalendarGrid day={day} date={date} handleUpdate={handleUpdate} />
+                    ) : null
                     }
                 </div>
             </div >

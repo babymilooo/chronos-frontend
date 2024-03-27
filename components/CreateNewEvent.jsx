@@ -89,7 +89,7 @@ export const CreateNewEvent = ({ date, time, id, handleUpdate, timeIndex, friend
         <>
             <Dialog key={timeIndex}>
                 <DialogTrigger asChild>
-                    <div className="border-l border-t border-content2 p-2 h-[50px] w-full z-2 hover:bg-background2"></div>
+                    <div className="border-l border-b border-foreground2 p-2 h-[50px] w-full z-2 hover:bg-background2"></div>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>

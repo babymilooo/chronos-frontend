@@ -11,6 +11,9 @@ class CalendarUtils {
         console.log("weekCalendarGrid", weekCalendarGrid);
 
         // Get the day calendar grid
+        const dayGrid = this.getDayCalendarGrid(calendarGrid, date);
+        setDay(dayGrid);
+        
     }
 
     static updateCalendarGrid = async (date, mergedCalendar, setMonthCalendar, setWeekCalendar, setDayCalendar) => {
@@ -23,6 +26,10 @@ class CalendarUtils {
         const weekNumber = CalendarUtils.getCurrentWeekNumber(date);
         const weekCalendarGrid = CalendarUtils.getWeekCalendarGrid(monthCalendarGrid, weekNumber);
         setWeekCalendar(weekCalendarGrid);
+
+        const dayGrid = this.getDayCalendarGrid(monthCalendarGrid, date);
+        setDayCalendar(dayGrid);
+        console.log(dayGrid);
     }
 
     static getDaysInMonth = (year, month) => {
@@ -85,9 +92,17 @@ class CalendarUtils {
         return calendarGrid;
     };
 
-    // static getDayCalendarGrid = (monthCalendarGrid, day) {
+    static getDayCalendarGrid = (monthCalendarGrid, day) => {
+        const dayInfo = monthCalendarGrid.find(dayObj => {
+            // Сначала преобразуем dateStr в объект Date
+            const dayDate = new Date(dayObj.dateStr);
+            return dayDate.getDate() === day.getDate() &&
+                dayDate.getMonth() === day.getMonth() &&
+                dayDate.getFullYear() === day.getFullYear();
+        });
 
-    // }
+        return dayInfo || null;
+    }
 
     static getWeekCalendarGrid = (monthCalendarGrid, weekNumber) => {
         // Calculate the index range for the desired week
