@@ -1,10 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { RootStoreContext } from "@/app/provider/rootStoreProvider";
-import { EyeSlashFilledIcon } from "@/app/components/images/EyeSlashFilledIcon";
-import { EyeFilledIcon } from "@/app/components/images/EyeFilledIcon";
 import Router from "next/router";
-import CustomToastContainer from "@/app/components/CustomToastContainer";
+import CustomToastContainer from "@/components/CustomToastContainer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -44,7 +42,7 @@ const registration = () => {
     return (
         <>
             <CustomToastContainer />
-            <div className="bg-gradient-to-r from-rose-500 to-purple-900 h-screen flex items-end">
+            <div className="bg-gradient-to-r from-rose-500 to-purple-900 h-screen flex items-center justify-center">
                 <div className="w-1/3 h-3/4 bg-bkg text-content rounded-t-[45px] mt-auto ml-15p">
                     {/* <div className="flex items-center mt-10 ml-10">
                         <Image
@@ -74,15 +72,15 @@ const registration = () => {
                             label="Password"
                             variant="bordered"
                             placeholder="Enter your password"
-                            endContent={
-                                <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                                    {isVisible ? (
-                                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                                    ) : (
-                                        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                                    )}
-                                </button>
-                            }
+                            // endContent={
+                            //     <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                            //         {isVisible ? (
+                            //             <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                            //         ) : (
+                            //             <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                            //         )}
+                            //     </button>
+                            // }
                             type={isVisible ? "text" : "password"}
                             className="max-w-xs mt-4"
                             value={password}
@@ -96,7 +94,6 @@ const registration = () => {
                                 Login
                             </Link>
                         </p>
-                        <Link href="/activateAccount">asdasd</Link>
                     </div>
                 </div>
             </div>

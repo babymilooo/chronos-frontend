@@ -45,8 +45,8 @@ const login = () => {
     return (
         <>
             <CustomToastContainer />
-            <div className="bg-gradient-to-r from-rose-500 to-purple-900 h-screen flex items-end">
-                <div className="w-1/3 h-3/4 bg-bkg text-content rounded-t-[45px] mt-auto ml-15p">
+            <div className="bg-gradient-to-r from-rose-500 to-purple-900 h-screen flex items-center justify-center">
+                <div className="w-1/4 h-3/4 text-content mt-auto ml-15p">
                     {/* <div className="flex items-center mt-10 ml-10">
                         <Image
                             width={40}
@@ -59,27 +59,28 @@ const login = () => {
                     </div> */}
                     <p className="flex items-center justify-center text-4xl font-bold mt-10">Login</p>
                     <div className="flex flex-col items-center justify-center h-auto mt-10">
-                        <div className="w-1/2 flex flex-col items-center">
-                            <Input
+                        <Input
                                 type="email"
                                 label="Email"
-                                className="w-full"
+                                className="max-w-xs"
                                 value={email}
+                                placeholder="Enter your email"
                                 onChange={e => setEmail(e.target.value)}
                             />
                             <Input
                                 type="Password"
-                                className="w-full mt-4"
+                                className="max-w-xs mt-4"
                                 value={password}
+                                placeholder="Enter your password"
                                 onChange={e => setPassword(e.target.value)}
                             />
-                            <Button color="default" variant="bordered" onClick={handleLogin} className="w-full mt-4 hover:border-content px-4 py-2">
-                                Login
-                            </Button>
-                            <p className="mt-3"> Don't have an account?
-                                <Link href="/registration" className=" hover:underline font-bold ml-1">Sign Up</Link>
-                            </p>
-                        </div>
+
+                        <Button color="default" variant="bordered" onClick={handleLogin} className="w-full mt-4 hover:border-content px-4 py-2">
+                            Login
+                        </Button>
+                        <p className="mt-3"> Don't have an account?
+                            <Link href="/registration" className=" hover:underline font-bold ml-1">Sign Up</Link>
+                        </p>
                     </div>
                 </div>
             </div>
