@@ -21,15 +21,6 @@ export default class UserService {
         }
     }
 
-    static async addToFriend(id) {
-        try {
-            const response = await $api.post(`${API_URL}/users/addtofriend/${id}`);
-            return response.data;
-        } catch (e) {
-            console.error(e.response?.data?.message);
-        }
-    }
-
     static async addFriend(id) {
         try {
             await $api.post(`${API_URL}/users/add-friend/${id}`);
