@@ -4,11 +4,9 @@ import { useRouter } from 'next/router';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
-import ToastService from '@/app/services/ToastService';
 import Link from 'next/link';
 import CustomToastContainer from '@/components/CustomToastContainer';
-import { Router } from 'lucide-react';
-import { set } from 'lodash';
+import { toast } from 'react-toastify';
 
 const SettingsPage = () => {
     const router = useRouter();
@@ -16,7 +14,7 @@ const SettingsPage = () => {
 
     const rootStore = useContext(RootStoreContext);
     const { userStore } = rootStore;
-    const id = userStore.user.id;
+    const id = userStore.user?.id;
     const { id: idFromQuery } = router.query;
     const [user, setUser] = useState({
         ...userStore.user,
@@ -61,9 +59,12 @@ const SettingsPage = () => {
         formData.append("username", user.username);
         formData.append("bio", user.bio);
 
-        const updatedUser = await UserService.updateUser(id, formData);
-        userStore.setUser(updatedUser);
-        ToastService("User data updated successfully", 200);
+        const updatedUser = await UserService.updateUser(formData);
+
+        if (updatedUser) {
+            toast.success("Profile updated successfully!")
+            userStore.setUser(updatedUser);
+        }
     };    
     
     if (loading || !userStore.user) {
@@ -116,7 +117,7 @@ const SettingsPage = () => {
                                     Back to Calendar
                                 </Button>
                             </Link>
-                            <Link href={`/users/${user.id}`} passHref>
+                            <Link href={`/users/${id}`} passHref>
                                 <Button variant="outline" className="border-none bg-foreground2">
                                     My Profile
                                 </Button>
