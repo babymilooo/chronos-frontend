@@ -54,8 +54,6 @@ const SettingsPage = () => {
     const handleSubmit = async (e) => {
         const formData = new FormData();
 
-        console.log(user)
-
         if (user.image) {
             formData.append("image", user.imageFile);
         }
@@ -78,12 +76,12 @@ const SettingsPage = () => {
             <CustomToastContainer />
             <div className="container mx-auto p-4 mt-10">
                 <div className="flex flex-col items-center">
-                    <div className="w-full max-w-2xl shadow overflow-hidden">
-                        <div className="relative overflow-hidden p-6">
+                    <div className="w-full max-w-2xl overflow-hidden rounded-lg">
+                        <div className="relative border border-foreground2 bg-background rounded-t-lg overflow-hidden p-6">
                             <div className="flex justify-center">
                                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                                    <img className="object-cover w-full h-full border-2 border-foreground2" src={user.image} alt="User avatar" />
-                                    <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 hover:opacity-100">
+                                    <img className="object-cover w-full h-full" src={user.image} alt="User avatar" />
+                                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                                         <span className="text-white text-lg">Change Image</span>
                                     </div>
                                     <input 
@@ -99,31 +97,31 @@ const SettingsPage = () => {
                                 <input 
                                     type="text" 
                                     value={user.username}
-                                    className="text-lg font-semibold text-neutral-500 block w-full bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-indigo-700" 
+                                    className="text-lg rounded-md block w-full bg-background2 focus:outline-none p-2" 
                                     onChange={handleUsernameChange} 
                                     placeholder="Enter username" 
                                 />
                                 <textarea 
                                     value={user.bio}
                                     onChange={handleBioChange} 
-                                    className="w-full mt-4 block w-full rounded-md bg-background2 p-2 min-h-[3rem]" 
+                                    className="w-full mt-4 block w-full rounded-md bg-background2 min-h-[3rem] focus:outline-none p-2"
                                     placeholder="Your bio"
                                 />
                             </div>
                         </div>
                         
-                        <div className="flex justify-between items-center p-4 bg-gray-100">
+                        <div className="flex justify-between items-center bg-foreground2 p-4">
                             <Link href="/calendar" passHref>
-                                <Button variant="ghost" className="htext-neutral-500 over:bg-gray500 p-3 rounded-lg">
+                                <Button variant="outline" className="border-none bg-foreground2">
                                     Back to Calendar
                                 </Button>
                             </Link>
                             <Link href={`/users/${user.id}`} passHref>
-                                <Button variant="ghost" className="text-neutral-500 hover:bg-gray-500 p-3 rounded-lg">
+                                <Button variant="outline" className="border-none bg-foreground2">
                                     My Profile
                                 </Button>
                             </Link>
-                            <Button onClick={handleSubmit} variant="ghost" className="text-neutral-500 hover:bg-gray-500 p-3 rounded-lg">
+                            <Button onClick={handleSubmit} variant="outline" className="border-none bg-foreground2">
                                 Save Changes
                             </Button>
                         </div>
@@ -133,5 +131,5 @@ const SettingsPage = () => {
         </>
     );
 };
-    
+
 export default SettingsPage;
