@@ -102,6 +102,74 @@ class EventsUtils {
         });
     }
 
+    static groupEventsByDateForDay(day) {
+
+        if (!Array.isArray(day.data) || day.data.length === 0) {
+            return day;
+        }
+
+        const singleDayEvents = day.data.filter(event => {
+            const startDate = new Date(event.data.startTime).setHours(0, 0, 0, 0);
+            const endDate = new Date(event.data.endTime).setHours(0, 0, 0, 0);
+            return startDate === endDate; // Если даты начала и конца совпадают
+        });
+
+        // Фильтруем события, которые пересекают несколько дней
+
+        const multiDayEventsWithCounts = day.data
+            // Фильтруем многодневные события
+            .filter(event => {
+                const startDate = new Date(event.data.startTime).setHours(0, 0, 0, 0);
+                const endDate = new Date(event.data.endTime).setHours(0, 0, 0, 0);
+                return startDate !== endDate; // Оставляем только многодневные события
+            })
+            // Считаем количество дубликатов для каждого многодневного события
+            .reduce((acc, currentEvent) => {
+                // Находим существующий элемент в аккумуляторе
+                const existingEvent = acc.find(event => event.data.originalEventId === currentEvent.data.originalEventId);
+
+                if (existingEvent) {
+                    // Если событие уже есть в аккумуляторе, увеличиваем счётчик
+                    existingEvent.count++;
+                } else {
+                    // Если событие встречается в первый раз, добавляем его с счётчиком 1
+                    acc.push({
+                        ...currentEvent,
+                        count: currentEvent.data.isDuplicate ? 0 : 1 // Если текущее событие - дубликат, начинаем с 0
+                    });
+                }
+                return acc;
+            }, [])
+            // Оставляем только оригинальные события (не дубликаты)
+            .filter(event => !event.data.isDuplicate)
+            // Корректируем свойство gridColumnEnd для каждого события
+            .map(event => ({
+                ...event,
+                gridColumnEnd: event.count // gridColumnEnd равен количеству дубликатов
+            }));
+
+        const eventsWithPosition = this.calculateOverlaps(singleDayEvents);
+
+        const updatedEvents = eventsWithPosition.map(event => {
+            // Add additional properties to event object if needed
+            return {
+                ...event,
+                // Use the calculated positions for left offset and width
+                leftOffset: event.leftOffset,
+                width: event.width,
+                // Your existing properties
+                topOffset: event.topOffset,
+                height: event.height,
+            };
+        });
+
+        return {
+            ...day,
+            data: updatedEvents,
+            multiDayEvents: multiDayEventsWithCounts
+        };
+    }
+
     static calculateOverlaps(events) {
         // Преобразуем события в массивы с дополнительной информацией о времени начала и конца в минутах
         const eventsWithTimeInfo = events.map(event => ({
