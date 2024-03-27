@@ -6,6 +6,8 @@ import { debounce } from 'lodash';
 import Link from 'next/link';
 import { observer } from 'mobx-react-lite';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import CustomToastContainer from '@/components/CustomToastContainer';
+import { toast } from 'react-toastify';
 
 const FriendsPage = observer(() => {
     const { userStore } = useContext(RootStoreContext);
@@ -58,7 +60,9 @@ const FriendsPage = observer(() => {
 
     const handleAddFriend = async (userId) => {
         try {
+            const name = displayedFriends.find(user => user.id === userId).username;
             await UserService.addFriend(userId);
+            toast.success(`Friend ${name} added successfully`);
             fetchPotentialFriends();
         } catch (error) {
             console.error('Error adding friend:', error);
@@ -72,6 +76,7 @@ const FriendsPage = observer(() => {
     return (
         <>
             <Navbar />
+            <CustomToastContainer />
             <div className="container mx-auto p-4 mt-10">
                 <div className="flex flex-col items-center">
                     <div className="w-full max-w-4xl border border-gray-300 shadow-xl rounded-lg p-4">

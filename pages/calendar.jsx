@@ -8,7 +8,6 @@ import CalendarNavigation from '@/components/CalendarNavigation';
 import Navbar from '@/components/Navbar';
 import MonthCalendarGrid from '@/components/calendarGrids/MonthCalendarGrid';
 import WeekCalendarGrid from '@/components/calendarGrids/WeekCalenmdarGrid';
-import { set } from 'lodash';
 
 const calendar = () => {
     const rootStore = useContext(RootStoreContext);

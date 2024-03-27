@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { use, useContext, useEffect, useState } from 'react';
 import UserService from '@/app/services/UserService';
 import { useRouter } from 'next/router';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import CustomToastContainer from '@/components/CustomToastContainer';
+import { toast } from 'react-toastify';
 
 const UserPage = () => {
     const router = useRouter();
@@ -67,11 +68,16 @@ const UserPage = () => {
     }, [router.query]);
 
     const handleActionFriend = async (friendId, isFriend, e) => {
+        let name = friends.length && !isFriend ? friends.find(friend => friend.id === friendId).name : user.username;
+
         if (isFriend) {
             await UserService.removeFriend(friendId);
+            toast.success(`Friend ${name} removed successfully`);
         } else {
             await UserService.addFriend(friendId);
+            toast.success(`Friend ${name} added successfully`);
         }
+
         fetchFriends();
         fetchIsFriend();
     };

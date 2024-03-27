@@ -9,6 +9,7 @@ export default class UserService {
             return response.data;
         } catch (e) {
             console.error(e.response?.data?.message);
+            ToastService(e, 300);
         }
     }
 
@@ -18,6 +19,7 @@ export default class UserService {
             return response.data;
         } catch (e) {
             console.error(e.response?.data?.message);
+            ToastService(e, 300);
         }
     }
 
@@ -26,6 +28,7 @@ export default class UserService {
             await $api.post(`${API_URL}/users/add-friend/${id}`);
         } catch (e) {
             console.error(e.response?.data?.message);
+            ToastService(e, 300);
         }
     }
 
@@ -34,6 +37,7 @@ export default class UserService {
             await $api.delete(`${API_URL}/users/remove-friend/${id}`);
         } catch (e) {
             console.error(e.response?.data?.message);
+            ToastService(e, 300);
         }
     }
 
@@ -43,6 +47,7 @@ export default class UserService {
             return response.data;
         } catch (e) {
             console.error(e.response?.data?.message);
+            ToastService(e, 300);
         }
     }
 
@@ -52,6 +57,7 @@ export default class UserService {
             return response.data.users;
         } catch (e) {
             console.error(e.response?.data?.message);
+            ToastService(e, 300);
         }
     }
 
@@ -61,15 +67,17 @@ export default class UserService {
             return response.data.isFriend;
         } catch (e) {
             console.error(e.response?.data?.message);
+            ToastService(e, 300);
         }
     }
 
-    static async updateUser(id, formData) {
+    static async updateUser(formData) {
         try {
-            const response = await $api.put(`${API_URL}/users/${id}/update`, formData);
+            const response = await $api.put(`${API_URL}/users/update`, formData);
             return response.data;
         } catch (e) {
-            ToastService(e.response?.data?.message);
+            console.error(e.response?.data?.message);
+            ToastService(e, 300);
         }
     }    
 }
