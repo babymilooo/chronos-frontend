@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { set } from 'lodash';
+import CustomToastContainer from '@/components/CustomToastContainer';
 
 const UserPage = () => {
     const router = useRouter();
@@ -23,7 +23,7 @@ const UserPage = () => {
     const [loading, setLoading] = useState(true);
     const [isFriend, setIsFriend] = useState(false);
     const [friends, setFriends] = useState([]);
-    const isOwnProfile = (user.id === userStore.user.id);
+    const isOwnProfile = (id === userStore.user.id);
 
     const fetchUser = async () => {
         try {
@@ -83,6 +83,7 @@ const UserPage = () => {
     return (
         <>
             <Navbar />
+            <CustomToastContainer />
             <div className="container mx-auto p-4 mt-10">
                 <div className="flex flex-col lg:flex-row justify-center items-center lg:items-start gap-6">
                     <div className="w-full lg:w-1/3 border border-foreground2 bg-background shadow-xl rounded-lg p-6">
