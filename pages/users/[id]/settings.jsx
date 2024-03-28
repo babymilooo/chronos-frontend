@@ -105,7 +105,7 @@ const SettingsPage = () => {
                                 <textarea
                                     value={user.bio}
                                     onChange={handleBioChange}
-                                    className="w-full mt-4 block w-full rounded-md bg-background2 min-h-[3rem] focus:outline-none p-2"
+                                    className="w-full mt-4 block rounded-md bg-background2 min-h-[3rem] focus:outline-none p-2"
                                     placeholder="Your bio"
                                 />
                             </div>

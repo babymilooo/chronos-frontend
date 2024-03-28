@@ -43,9 +43,9 @@ const calendar = () => {
         setActive(value);
     };
 
-    async function getEvents(id) {
+    async function getEvents() {
         try {
-            const response = await CalendarService.getEvents(currentYear, id);
+            const response = await CalendarService.getEvents(currentYear);
             return response || []; // Return the response or an empty array if it's falsy
         } catch (error) {
             console.error("Error getting events:", error);
@@ -82,6 +82,7 @@ const calendar = () => {
 
     const handleUpdate = async () => {
         const holidaysData = holidaysStore.holidays.map(holiday => ({ ...holiday }));
+        console.log(userStore.user.id);
         const eventsData = await getEvents(userStore.user.id);
 
         const eventsDataWithDateTime = await EventsUtils.eventsDataWithDateTime(eventsData);

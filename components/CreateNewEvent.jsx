@@ -76,6 +76,7 @@ export const CreateNewEvent = ({ date, time, id, handleUpdate, timeIndex, friend
         } else {
             console.error('Ошибка создания события');
         }
+        console.log(formData);
     };
 
     const availableForCoOwners = friends?.filter(

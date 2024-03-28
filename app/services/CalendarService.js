@@ -13,7 +13,7 @@ export default class CalendarService {
         }
     }
 
-    static async getEvents(currentYear, id) {
+    static async getEvents(currentYear) {
         try {
             const response = await $api.get(`${API_URL}/events`, { params: { year: currentYear } });
             return response.data;
