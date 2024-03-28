@@ -13,7 +13,7 @@ export function SideBar({ day }) {
       setTodayData(day);
       setLoading(false);
     }
-  }, []);
+  }, [day]);
 
   if (loading) {
     return <p>Loading...</p>;

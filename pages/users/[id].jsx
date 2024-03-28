@@ -57,7 +57,7 @@ const UserPage = () => {
 
     useEffect(() => {
         setLoading(true);
-        
+
         if (id) {
             fetchUser();
         }
@@ -96,7 +96,7 @@ const UserPage = () => {
                         <div className="mb-4">
                             <div className="relative rounded-full overflow-hidden h-32 w-32 mx-auto">
                                 <img
-                                    src={user.image}
+                                    src={`http://localhost:5001/api/user/avatar/${user.image || "default.png"}`}
                                     alt="Profile"
                                     className="object-cover w-full h-full"
                                 />
@@ -106,13 +106,13 @@ const UserPage = () => {
                             <div>
                                 <label className="text-neutral-500">Username</label>
                                 <div className="mt-1 block w-full rounded-md bg-background2 p-2">
-                                    {user.username  || 'None'}
+                                    {user.username || 'None'}
                                 </div>
                             </div>
                             <div>
                                 <label className="text-neutral-500">Email</label>
                                 <div className="mt-1 block w-full rounded-md bg-background2 p-2">
-                                    {user.email  || 'None'}
+                                    {user.email || 'None'}
                                 </div>
                             </div>
                             <div>
@@ -148,7 +148,7 @@ const UserPage = () => {
                                             <div className="flex mb-4 items-center justify-between border rounded-lg p-2">
                                                 <Link key={friend.id} href={`/users/${friend.id}`} passHref className='cursor-grab'>
                                                     <div className="flex items-center gap-4">
-                                                        <img src={friend.image} alt={friend.name} className="h-10 w-10 rounded-full object-cover" />
+                                                        <img src={`http://localhost:5001/api/user/avatar/${friend.image || "default.png"}`} alt={friend.name} className="h-10 w-10 rounded-full object-cover" />
                                                         <div className="text-sm font-medium">{friend.name}</div>
                                                     </div>
                                                 </Link>
@@ -156,11 +156,11 @@ const UserPage = () => {
                                                     {userStore.user.id === friend.id ? (
                                                         <></>
                                                     ) : friend.isFriend ? (
-                                                        <div onClick={() => handleActionFriend(friend.id, true)} variant="ghost" className="w-full hover:bg-red-500 mb-2 hover:bg-red-500 hover:text-white p-3 rounded-lg">
+                                                        <div onClick={() => handleActionFriend(friend.id, true)} variant="ghost" className="w-full hover:bg-red-500 mb-2  hover:text-white p-3 rounded-lg">
                                                             Remove Friend
                                                         </div>
                                                     ) : (
-                                                        <div onClick={() => handleActionFriend(friend.id, false)} variant="ghost" className="w-full hover:bg-green-500 mb-2 hover:bg-red-500 hover:text-white p-3 rounded-lg">
+                                                        <div onClick={() => handleActionFriend(friend.id, false)} variant="ghost" className="w-full hover:bg-green-500 mb-2  hover:text-white p-3 rounded-lg">
                                                             Add Friend
                                                         </div>
                                                     )}

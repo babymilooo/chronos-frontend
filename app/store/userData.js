@@ -52,12 +52,12 @@ class UserStore {
             const response = await AuthService.chechAuth();
             runInAction(() => {
                 this.setUser(response.data.user);
+                localStorage.setItem('accesstoken', response.data.accessToken);
             });
             // const friends = await UserService.getFriends(response.data.user.id);
             const friends = await UserService.getFriends(response.data.user.id);
             this.setFriends(friends);
             this.setIsLoading(false);
-            localStorage.setItem('accesstoken', response.data.accessToken);
         } catch (e) {
             if (e?.response?.status === 401) { // Use optional chaining to access properties
                 await Router.push('/login');
@@ -72,9 +72,11 @@ class UserStore {
             const response = await AuthService.login(email, password);
             runInAction(() => {
                 this.setUser(response.data.user);
-                this.setIsLoading(false);
                 localStorage.setItem('accesstoken', response.data.accessToken);
             });
+            const friends = await UserService.getFriends(response.data.user.id);
+            this.setFriends(friends);
+            this.setIsLoading(false);
             return true;
         }
         catch (e) {
@@ -104,6 +106,7 @@ class UserStore {
             localStorage.clear('accesstoken');
             Router.push('/login');
             this.isLoading = true;
+            this.friends = [];
         }
         catch (e) {
             console.error(e.response?.data?.message);

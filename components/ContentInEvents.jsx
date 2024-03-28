@@ -110,7 +110,7 @@ export function ContentInEvents({
                     {creatorData ?
                         <>
                             <Avatar>
-                                <img src={creatorData.image} alt={creatorData.username} />
+                                <img src={`http://localhost:5001/api/user/avatar/${creatorData.image || "default.png"}`} alt={creatorData.username} />
                             </Avatar>
                             <p className="ml-2 font-bold">{creatorData.username}</p>
                         </>
@@ -123,7 +123,7 @@ export function ContentInEvents({
                         {coOwnersData.map((coOwner, index) => (
                             <div key={index} className="flex items-center rounded-xl mt-1 hover:bg-foreground2 p-1">
                                 <Avatar>
-                                    <img src={coOwner.image} alt={coOwner.username} />
+                                    <img src={`http://localhost:5001/api/user/avatar/${coOwner.image || "default.png"}`} alt={coOwner.username} />
                                 </Avatar>
                                 <p className="ml-2 font-bold">{coOwner.username}</p>
                             </div>
@@ -136,7 +136,7 @@ export function ContentInEvents({
                         {followersData.map((follower, index) => (
                             <div key={index} className="flex items-center rounded-xl mt-1 hover:bg-foreground2 p-1">
                                 <Avatar>
-                                    <img src={follower?.image} alt={follower.username} />
+                                    <img src={`http://localhost:5001/api/user/avatar/${follower.image || "default.png"}`} alt={follower.username} />
                                 </Avatar>
                                 <p className="ml-2 font-bold">{follower.username}</p>
                             </div>
