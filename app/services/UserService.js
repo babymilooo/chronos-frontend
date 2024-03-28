@@ -25,7 +25,7 @@ export default class UserService {
 
     static async addFriend(id) {
         try {
-            await $api.post(`${API_URL}/users/add-friend/${id}`);
+            return await $api.post(`${API_URL}/users/add-friend/${id}`);
         } catch (e) {
             console.error(e.response?.data?.message);
             ToastService(e, 300);
@@ -79,5 +79,5 @@ export default class UserService {
             console.error(e.response?.data?.message);
             ToastService(e, 300);
         }
-    }    
+    }
 }

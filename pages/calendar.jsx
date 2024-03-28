@@ -82,7 +82,6 @@ const calendar = () => {
 
     const handleUpdate = async () => {
         const holidaysData = holidaysStore.holidays.map(holiday => ({ ...holiday }));
-        console.log(userStore.user.id);
         const eventsData = await getEvents(userStore.user.id);
 
         const eventsDataWithDateTime = await EventsUtils.eventsDataWithDateTime(eventsData);

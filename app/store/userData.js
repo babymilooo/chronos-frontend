@@ -47,6 +47,10 @@ class UserStore {
         this.friends = [...this.friends, friend];
     }
 
+    removeFromFriends(friendId) {
+        this.friends = this.friends.filter(friend => friend.id !== friendId);
+    }
+
     async checkAuth() {
         try {
             const response = await AuthService.chechAuth();

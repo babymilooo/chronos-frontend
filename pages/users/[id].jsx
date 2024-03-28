@@ -72,9 +72,11 @@ const UserPage = () => {
 
         if (isFriend) {
             await UserService.removeFriend(friendId);
+            userStore.removeFromFriends(friendId);
             toast.success(`Friend ${name} removed successfully`);
         } else {
-            await UserService.addFriend(friendId);
+            const response = await UserService.addFriend(friendId);
+            userStore.addToFriends(response.data);
             toast.success(`Friend ${name} added successfully`);
         }
 

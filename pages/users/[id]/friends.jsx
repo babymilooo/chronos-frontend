@@ -61,7 +61,16 @@ const FriendsPage = observer(() => {
     const handleAddFriend = async (userId) => {
         try {
             const name = displayedFriends.find(user => user.id === userId).username;
-            await UserService.addFriend(userId);
+            const response = await UserService.addFriend(userId);
+            console.log(response);
+            const friend = {
+                id: response.data.id,
+                name: response.data.username,
+                image: response.data.image,
+                bio: response.data.bio,
+                isFriend: true
+            };
+            userStore.addToFriends(friend);
             toast.success(`Friend ${name} added successfully`);
             fetchPotentialFriends();
         } catch (error) {
@@ -91,15 +100,15 @@ const FriendsPage = observer(() => {
                             <ScrollArea>
                                 {displayedFriends.map(user => (
                                     <div key={user.id} className="flex items-center justify-between p-2 border-b">
-                                    <Link href={`/users/${user.id}`} passHref>
-                                        <div className="flex items-center gap-4">
-                                            <img src={`http://localhost:5001/api/user/avatar/${user.image || 'default.png'}`} alt={user.username} className="h-10 w-10 rounded-full object-cover" />
-                                            <div className="text-sm font-medium">{user.username}</div>
-                                        </div>
-                                    </Link>
-                                    <button onClick={() => handleAddFriend(user.id)} className="bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded">
-                                        Add Friend
-                                    </button>
+                                        <Link href={`/users/${user.id}`} passHref>
+                                            <div className="flex items-center gap-4">
+                                                <img src={`http://localhost:5001/api/user/avatar/${user.image || 'default.png'}`} alt={user.username} className="h-10 w-10 rounded-full object-cover" />
+                                                <div className="text-sm font-medium">{user.username}</div>
+                                            </div>
+                                        </Link>
+                                        <button onClick={() => handleAddFriend(user.id)} className="bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded">
+                                            Add Friend
+                                        </button>
                                     </div>
                                 ))}
                             </ScrollArea>
