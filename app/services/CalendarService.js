@@ -15,7 +15,7 @@ export default class CalendarService {
 
     static async getEvents(currentYear, id) {
         try {
-            const response = await $api.get(`${API_URL}/events`, { params: { year: currentYear, id } });
+            const response = await $api.get(`${API_URL}/events`, { params: { year: currentYear } });
             return response.data;
         } catch (error) {
             if (error.response && error.response.status === 404) {

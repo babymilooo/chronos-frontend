@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import AuthService from '../services/AuthService';
 import Router from 'next/router';
 import UserService from '../services/UserService';
+import ToastService from '../services/ToastService';
 
 class UserStore {
     user = {
@@ -62,6 +63,7 @@ class UserStore {
                 await Router.push('/login');
             }
             console.error(e.response?.data?.message);
+            ToastService(e);
         }
     }
 
@@ -77,6 +79,7 @@ class UserStore {
         }
         catch (e) {
             console.error(e.response?.data?.message);
+            ToastService(e);
         }
     }
 
@@ -90,6 +93,7 @@ class UserStore {
         }
         catch (e) {
             console.error(e.response?.data?.message);
+            ToastService(e);
         }
     }
 
@@ -103,6 +107,7 @@ class UserStore {
         }
         catch (e) {
             console.error(e.response?.data?.message);
+            ToastService(e);
         }
     }
 }
