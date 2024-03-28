@@ -54,11 +54,13 @@ const calendar = () => {
     }
 
     useEffect(() => {
+
         async function fetchData() {
             try {
                 // Only fetch data if isLoading is false and calendar is empty
                 if (!holidaysStore.isLoading && calendar.length === 0) {
                     const holidaysData = holidaysStore.holidays.map(holiday => ({ ...holiday }));
+                    
                     const eventsData = await getEvents(userStore.user.id);
 
                     const eventsDataWithDateTime = await EventsUtils.eventsDataWithDateTime(eventsData);
@@ -70,6 +72,7 @@ const calendar = () => {
                     await CalendarUtils.createCalendarGrid(mergedCalendar, currentYear, currentMonth, date, setMonthCalendar, setWeek, setDay);
 
                     setLoading(false);
+                    console.log("data ready")
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -102,7 +105,7 @@ const calendar = () => {
             <Navbar />
             {/* The rest of the content will flex to take up the remaining space */}
             <div className="flex flex-grow overflow-hidden">
-                <SideBar day={day}/>
+                <SideBar day={day} />
                 <div className="w-5/6 overflow-auto p-4"> {/* Main content */}
                     <CalendarNavigation setMonthCalendar={updateMonthCalendar} setWeekCalendar={updateWeekCalendar} setDayCalendar={updateDayCalendar} setDate={setDate} mergedCalendar={calendar} active={active} setActive={handleSetActive} />
                     {active === 'month' ? (

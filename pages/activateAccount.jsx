@@ -7,7 +7,7 @@ import React, { useContext, useState } from 'react';
 
 const ActivateAccount = () => {
     const rootStore = useContext(RootStoreContext);
-    const { userStore } = rootStore;
+    const { userStore, holidaysStore } = rootStore;
 
     const [password, setPassword] = useState('');
     const handleSubmit = async (e) => {
@@ -16,8 +16,10 @@ const ActivateAccount = () => {
         try {
             const response = await AuthService.activateAccount(email, password);
             if (response && response.status === 200) {
+                holidaysStore.getHolidays(userStore.currentYear);
+                userStore.setIsLoading(false);
+                console.log('Account activated');
                 Router.push('/calendar');
-                userStore.isLoading = false;
             }
         } catch (error) {
             console.error(error);

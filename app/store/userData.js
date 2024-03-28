@@ -94,7 +94,7 @@ class UserStore {
             const response = await AuthService.register(email, password);
             this.setUser(response.data.user);
             localStorage.setItem('accesstoken', response.data.accessToken);
-
+            this.setIsLoading(false);
             return true;
         }
         catch (e) {

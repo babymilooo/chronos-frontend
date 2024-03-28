@@ -57,13 +57,10 @@ const registration = () => {
                     <p className="flex items-center justify-center text-4xl font-bold mt-10">Sign Up</p>
                     <div className="flex flex-col items-center justify-center h-auto mt-10">
                         <Input
-                            isClearable
                             type="email"
                             label="Email"
                             variant="bordered"
                             placeholder="Enter your email"
-                            defaultValue="junior@nextui.org"
-                            onClear={() => console.log("input cleared")}
                             className="max-w-xs"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
@@ -72,15 +69,6 @@ const registration = () => {
                             label="Password"
                             variant="bordered"
                             placeholder="Enter your password"
-                            // endContent={
-                            //     <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                            //         {isVisible ? (
-                            //             <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                            //         ) : (
-                            //             <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                            //         )}
-                            //     </button>
-                            // }
                             type={isVisible ? "text" : "password"}
                             className="max-w-xs mt-4"
                             value={password}
