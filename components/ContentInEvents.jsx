@@ -80,16 +80,16 @@ export function ContentInEvents({
 
     return <MyPopover key={eventIndex}>
         <MyPopoverTrigger asChild>
-            <div className="absolute left-0 rounded-md border-l-8 border-red-900 bg-red-500" style={{
+            <div className="absolute left-0 rounded-md border-l-8 border-red-900 bg-red-500 " style={{
                 top: `calc(${event.topOffset}px + 2px)`,
                 height: `calc(${event.height}px - 3px)`,
                 width: `calc(${event.width}% - 2px)`,
                 left: `calc(${event.leftOffset}% + 2px)`,
                 zIndex: 30
             }}>
-                <div className="p-2">
-                    <h3 className="text-xs font-bold pl-4 text-white">{event.name}</h3>
-                    <p className="text-xs">{event.description}</p>
+                <div className="p-2 truncate">
+                    <h3 className="text-xs font-bold text-white truncate">{event.name}</h3>
+                    <p className="text-xs truncate">{event.description}</p>
                 </div>
             </div>
         </MyPopoverTrigger>
@@ -107,10 +107,15 @@ export function ContentInEvents({
                 </div>
                 <p className="font-bold mt-4">Creator:</p>
                 <div className="flex items-center rounded-xl mt-1 hover:bg-foreground2 p-1">
-                    <Avatar>
-                        <img src={creatorData.image} alt={creatorData.username} />
-                    </Avatar>
-                    <p className="ml-2 font-bold">{creatorData.username}</p>
+                    {creatorData ?
+                        <>
+                            <Avatar>
+                                <img src={creatorData.image} alt={creatorData.username} />
+                            </Avatar>
+                            <p className="ml-2 font-bold">{creatorData.username}</p>
+                        </>
+                        : <p>Loading...</p>}
+
                 </div>
                 {Array.isArray(coOwnersData) ? (
                     <>
@@ -131,7 +136,7 @@ export function ContentInEvents({
                         {followersData.map((follower, index) => (
                             <div key={index} className="flex items-center rounded-xl mt-1 hover:bg-foreground2 p-1">
                                 <Avatar>
-                                    <img src={follower.image} alt={follower.username} />
+                                    <img src={follower?.image} alt={follower.username} />
                                 </Avatar>
                                 <p className="ml-2 font-bold">{follower.username}</p>
                             </div>

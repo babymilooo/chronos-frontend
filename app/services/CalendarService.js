@@ -26,11 +26,9 @@ export default class CalendarService {
         }
     }
 
-    static async createEvent(title, startDate, endDate, startTime, endTime, eventType, repeat, priority, coOwners = [], attendees = [], user) {
+    static async createEvent(title, startDate, endDate, startTime, endTime, eventType, repeat, priority, coOwners = [], attendees = [], description, user) {
         try {
-            console.log('createEvent');
-            console.log(title, startDate, endDate, startTime, endTime, eventType, repeat, priority, coOwners, attendees, user);
-            await $api.post(`${API_URL}/events`, { title, startDate, endDate, startTime, endTime, eventType, repeat, priority, coOwners, attendees, user });
+            await $api.post(`${API_URL}/events`, { title, startDate, endDate, startTime, endTime, eventType, repeat, priority, coOwners, attendees, description, user });
             return true;
         } catch (error) {
             console.error('Произошла ошибка при создании события:', error);
@@ -40,8 +38,7 @@ export default class CalendarService {
 
     static async getEventsAndHolidays(year, country, type, id) {
         try {
-            console.log('getEventsAndHolidays');
-            console.log(year, country, type, id)
+
             const holidays = await this.getHolidays(year, country, type);
             const events = await this.getEvents(year, id);
             return { holidays, events };
