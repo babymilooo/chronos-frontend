@@ -37,21 +37,18 @@ const DayCalendarGrid = ({ day, date, handleUpdate }) => {
         return { hour, minute }; // Return an object with hour and minute
     });
 
-    const friends = userStore.friends.users.map((user) => {
+    const friends = userStore.friends.map((user) => {
         return {
             value: user.id,
-            label: user.username,
+            label: user.name,
             avatarUrl: user.image,
-            email: user.email
         };
     });
 
     const weekdate = new Date(day.dateStr); // где day.dateStr это ваш объект Date
     const weekday = weekdate.toLocaleDateString('en-US', { weekday: 'long' });
-    console.log(weekday);
 
     const groupedEvents = EventsUtils.groupEventsByDateForDay(day);
-    console.log(groupedEvents);
     return (
         <div className="flex flex-col w-full">
             {/* Empty cell for the time column */}

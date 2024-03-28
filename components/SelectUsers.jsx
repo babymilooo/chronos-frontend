@@ -4,7 +4,6 @@ import { Avatar } from './ui/avatar';
 
 // Эти стили применят Tailwind классы через CSS переменные
 const SelectUsers = ({ users, setUsers }) => {
-    console.log(users);
     // Состояние для хранения текущей темы
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
 

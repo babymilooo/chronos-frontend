@@ -25,12 +25,9 @@ class HolidaysStore {
 
     async getHolidays(currentYear) {
         try {
-            console.log("getHolidays");
             const response = await HolidaysFunc.getHolidays(currentYear);
-            console.log(response);
             runInAction(() => {
                 this.setHolidays(response); // Установите данные о праздниках
-                console.log(this.holidays);
                 this.isLoading = false;
             });
         } catch (error) {

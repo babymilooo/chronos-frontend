@@ -18,28 +18,28 @@ const SettingsPage = () => {
     const { id: idFromQuery } = router.query;
     const [user, setUser] = useState({
         ...userStore.user,
-        image: userStore.user.image ? `http://localhost:5001/api/user/avatar/${userStore.user.image}` : null,
+        // image: userStore.user.image ? `http://localhost:5001/api/user/avatar/${userStore.user.image}` : null,
     });
 
     useEffect(() => {
         if (!id) {
             router.push(`/calendar`);
-        } else if(idFromQuery !== id) {
+        } else if (idFromQuery !== id) {
             router.push(`/users/${id}/settings`);
         }
         setLoading(false);
-      }, []);
+    }, []);
 
     const handleFileChange = (event) => {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
-            setUser((currentUser) => ({ 
-                ...currentUser, 
+            setUser((currentUser) => ({
+                ...currentUser,
                 image: URL.createObjectURL(file),
                 imageFile: file
             }));
         }
-    };    
+    };
 
     const handleBioChange = (event) => {
         setUser((currentUser) => ({ ...currentUser, bio: event.target.value }));
@@ -47,7 +47,7 @@ const SettingsPage = () => {
 
     const handleUsernameChange = (event) => {
         setUser((currentUser) => ({ ...currentUser, username: event.target.value }));
-    };  
+    };
 
     const handleSubmit = async (e) => {
         const formData = new FormData();
@@ -65,8 +65,8 @@ const SettingsPage = () => {
             toast.success("Profile updated successfully!")
             userStore.setUser(updatedUser);
         }
-    };    
-    
+    };
+
     if (loading || !userStore.user) {
         return <div>Loading...</div>;
     }
@@ -81,36 +81,36 @@ const SettingsPage = () => {
                         <div className="relative border border-foreground2 bg-background rounded-t-lg overflow-hidden p-6">
                             <div className="flex justify-center">
                                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                                    <img className="object-cover w-full h-full" src={user.image} alt="User avatar" />
+                                    <img className="object-cover w-full h-full" src={`http://localhost:5001/api/user/avatar/${userStore.user.image || 'default.png'}`} alt="User avatar" />
                                     <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                                         <span className="text-white text-lg">Change Image</span>
                                     </div>
-                                    <input 
-                                        id="image-upload" 
-                                        type="file" 
-                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
-                                        onChange={handleFileChange} 
+                                    <input
+                                        id="image-upload"
+                                        type="file"
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        onChange={handleFileChange}
                                         accept="image/*,video/*,.gif"
                                     />
                                 </div>
                             </div>
                             <div className="mt-6">
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     value={user.username}
-                                    className="text-lg rounded-md block w-full bg-background2 focus:outline-none p-2" 
-                                    onChange={handleUsernameChange} 
-                                    placeholder="Enter username" 
+                                    className="text-lg rounded-md block w-full bg-background2 focus:outline-none p-2"
+                                    onChange={handleUsernameChange}
+                                    placeholder="Enter username"
                                 />
-                                <textarea 
+                                <textarea
                                     value={user.bio}
-                                    onChange={handleBioChange} 
+                                    onChange={handleBioChange}
                                     className="w-full mt-4 block w-full rounded-md bg-background2 min-h-[3rem] focus:outline-none p-2"
                                     placeholder="Your bio"
                                 />
                             </div>
                         </div>
-                        
+
                         <div className="flex justify-between items-center bg-foreground2 p-4">
                             <Link href="/calendar" passHref>
                                 <Button variant="outline" className="border-none bg-foreground2">

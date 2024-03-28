@@ -3,12 +3,10 @@ class CalendarUtils {
         // Get the month calendar grid
         const calendarGrid = this.getCalendarGrid(year, month, mergedCalendar);
         setMonthCalendar(calendarGrid);
-        console.log("calendarGrid", calendarGrid);
         // Get the week calendar grid
         const weekNumber = this.getCurrentWeekNumber(date);
         const weekCalendarGrid = this.getWeekCalendarGrid(calendarGrid, weekNumber);
         setWeek(weekCalendarGrid);
-        console.log("weekCalendarGrid", weekCalendarGrid);
 
         // Get the day calendar grid
         const dayGrid = this.getDayCalendarGrid(calendarGrid, date);
@@ -29,7 +27,6 @@ class CalendarUtils {
 
         const dayGrid = this.getDayCalendarGrid(monthCalendarGrid, date);
         setDayCalendar(dayGrid);
-        console.log(dayGrid);
     }
 
     static getDaysInMonth = (year, month) => {

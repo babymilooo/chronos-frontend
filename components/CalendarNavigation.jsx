@@ -13,7 +13,6 @@ const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, setDayCalendar,
     const currentYear = currentDate.getFullYear();
 
     const goToPrevious = () => {
-        console.log("goToPrevious", active);
         let newDate;
         switch (active) {
             case 'day':
@@ -27,7 +26,6 @@ const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, setDayCalendar,
                 newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1);
                 break;
         }
-        console.log(newDate);
         setCurrentDate(newDate);
         setDate(newDate);
         // Here call the function to update the calendar grid
@@ -35,7 +33,6 @@ const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, setDayCalendar,
     };
 
     const goToNext = () => {
-        console.log("goToNext", active);
         let newDate;
         switch (active) {
             case 'day':
@@ -49,7 +46,6 @@ const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, setDayCalendar,
                 newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1);
                 break;
         }
-        console.log(newDate);
         setCurrentDate(newDate);
         setDate(newDate);
         // Here call the function to update the calendar grid
@@ -59,7 +55,6 @@ const CalendarNavigation = ({ setMonthCalendar, setWeekCalendar, setDayCalendar,
     const goToToday = () => {
         const today = new Date();
 
-        console.log(today.toString());
 
         setCurrentDate(today);
         setDate(today);

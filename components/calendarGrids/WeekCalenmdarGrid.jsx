@@ -5,6 +5,7 @@ import EventsUtils from '@/app/utils/events-utils';
 import { CreateNewEvent } from '../CreateNewEvent';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 import { ContentInEvents } from '../ContentInEvents';
+import { observer } from 'mobx-react-lite';
 
 const getCurrentTimeOffset = () => {
     const now = new Date();
@@ -42,16 +43,13 @@ const WeekCalendarGrid = ({ week, handleUpdate }) => {
     });
 
     const groupedEvents = EventsUtils.groupEventsByDate(week);
-    console.log(groupedEvents);
-    const friends = userStore.friends.users.map((user) => {
+    const friends = userStore.friends.map((user) => {
         return {
             value: user.id,
-            label: user.username,
-            avatarUrl: user.image,
-            email: user.email
+            label: user.name,
+            avatarUrl: user.image
         };
     });
-
     return (
         <div className="flex flex-col w-full">
             <div className="grid grid-cols-[50px_repeat(7,_1fr)]">
@@ -62,7 +60,6 @@ const WeekCalendarGrid = ({ week, handleUpdate }) => {
                         <div key={dayIndex} className="flex items-center justify-center p-2 text-center font-bold border-l">
                             {dayData.day} {weekDays[dayIndex]}
                         </div>
-
                     )
                 })}
             </div>
@@ -153,6 +150,6 @@ const WeekCalendarGrid = ({ week, handleUpdate }) => {
     );
 };
 
-export default WeekCalendarGrid;
+export default observer(WeekCalendarGrid);
 
 

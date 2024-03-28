@@ -18,10 +18,8 @@ const calendarByYear = () => {
     useEffect(() => {
         async function fetchData() {
             if (!userStore.isLoading) {
-                console.log(year)
                 const { holidays, events } = await CalendarService.getEventsAndHolidays(year, country, type, userStore.user.id);
 
-                console.log(holidays, events);
 
                 const eventsDataWithDateTime = await EventsUtils.eventsDataWithDateTime(events);
 

@@ -42,15 +42,18 @@ class UserStore {
         this.friends = friends;
     }
 
+    addToFriends(friend) {
+        this.friends = [...this.friends, friend];
+    }
+
     async checkAuth() {
         try {
             const response = await AuthService.chechAuth();
             runInAction(() => {
-                console.log("render");
                 this.setUser(response.data.user);
             });
             // const friends = await UserService.getFriends(response.data.user.id);
-            const friends = await UserService.getUsers(response.data.user.id);
+            const friends = await UserService.getFriends(response.data.user.id);
             this.setFriends(friends);
             this.setIsLoading(false);
             localStorage.setItem('accesstoken', response.data.accessToken);

@@ -94,7 +94,6 @@ const calendar = () => {
     };
 
     if (loading) {
-        console.log("Loading...");
         return <div>Loading...</div>;
     }
 

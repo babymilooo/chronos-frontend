@@ -70,19 +70,18 @@ export const CreateNewEvent = ({ date, time, id, handleUpdate, timeIndex, friend
         const formatedStartDate = formatedDate(startDate);
         const formatedEndDate = formatedDate(endDate);
 
-        const result = await CalendarService.createEvent(title, formatedStartDate, formatedEndDate, startTime, endTime, eventType,repeat, priority, coOwners, attendees, description, id);
+        const result = await CalendarService.createEvent(title, formatedStartDate, formatedEndDate, startTime, endTime, eventType, repeat, priority, coOwners, attendees, description, id);
         if (result) {
             handleUpdate();
         } else {
             console.error('Ошибка создания события');
         }
-        console.log(formData);
     };
 
-    const availableForCoOwners = friends.filter(
+    const availableForCoOwners = friends?.filter(
         (friend) => !attendees.includes(friend.value)
     );
-    const availableForAttendees = friends.filter(
+    const availableForAttendees = friends?.filter(
         (friend) => !coOwners.includes(friend.value)
     );
 
@@ -159,8 +158,18 @@ export const CreateNewEvent = ({ date, time, id, handleUpdate, timeIndex, friend
                             </div>
                         </div>
                         <div className="grid grid-cols-2 items-center gap-2">
-                            <SelectUsers users={availableForCoOwners} setUsers={setCoOwners} className="col-span-1" />
-                            <SelectUsers users={availableForAttendees} setUsers={setAttendees} className="col-span-1" />
+                            <div>
+                                <Label className="text-right font-bold">
+                                    Co-owners
+                                </Label>
+                                <SelectUsers users={availableForCoOwners} setUsers={setCoOwners} className="col-span-1" />
+                            </div>
+                            <div>
+                                <Label className="text-right font-bold">
+                                    Followers
+                                </Label>
+                                <SelectUsers users={availableForAttendees} setUsers={setAttendees} className="col-span-1" />
+                            </div>
                         </div>
                         <div className="grid grid-cols-1 items-center gap-2">
                             <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />

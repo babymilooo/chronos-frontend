@@ -11,7 +11,6 @@ const MonthCalendarGrid = ({ calendar }) => {
         return date.toLocaleDateString('en-US', { weekday: 'long' });
     }
 
-    console.log(calendar)
     return (
         <div className="flex-grow">
             <div className="grid grid-cols-7 gap-1 w-full">

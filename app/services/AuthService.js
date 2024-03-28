@@ -47,7 +47,6 @@ export default class AuthService {
         try {
             const response = await $api.post(`${API_URL}/auth/activate`, { email, activationPassword });
             localStorage.clear('emailForActivation');
-            console.log(response);
             return response;
         } catch (e) {
             ToastService(e.response?.data?.message);

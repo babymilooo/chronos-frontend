@@ -13,7 +13,6 @@ const ActivateAccount = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const email = localStorage.getItem('emailForActivation');
-        console.log(password);
         try {
             const response = await AuthService.activateAccount(email, password);
             if (response && response.status === 200) {
