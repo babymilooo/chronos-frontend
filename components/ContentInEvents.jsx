@@ -80,16 +80,16 @@ export function ContentInEvents({
 
     return <MyPopover key={eventIndex}>
         <MyPopoverTrigger asChild>
-            <div className="absolute left-0 rounded-md border-l-8 border-red-900 bg-red-500" style={{
+            <div className="absolute left-0 rounded-md border-l-8 border-red-900 bg-red-500 " style={{
                 top: `calc(${event.topOffset}px + 2px)`,
                 height: `calc(${event.height}px - 3px)`,
                 width: `calc(${event.width}% - 2px)`,
                 left: `calc(${event.leftOffset}% + 2px)`,
                 zIndex: 30
             }}>
-                <div className="p-2">
-                    <h3 className="text-xs font-bold pl-4 text-white">{event.name}</h3>
-                    <p className="text-xs">{event.description}</p>
+                <div className="p-2 truncate">
+                    <h3 className="text-xs font-bold text-white truncate">{event.name}</h3>
+                    <p className="text-xs truncate">{event.description}</p>
                 </div>
             </div>
         </MyPopoverTrigger>

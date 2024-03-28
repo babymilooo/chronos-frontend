@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
+import { Avatar } from './ui/avatar';
 
 // Эти стили применят Tailwind классы через CSS переменные
 const SelectUsers = ({ users, setUsers }) => {
@@ -60,10 +61,16 @@ const SelectUsers = ({ users, setUsers }) => {
     };
 
     const formatOptionLabel = ({ value, label, avatarUrl, email }) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={`http://localhost:5001/api/user/avatar/${avatarUrl || "default.png"}`} alt={label} style={{ width: '20px', height: '20px', marginRight: '10px' }} />
-            <span>{label}</span>
-            <span>{email}</span>
+        // <div style={{ display: 'flex', alignItems: 'center' }}>
+        //     <img src={`http://localhost:5001/api/user/avatar/${avatarUrl || "default.png"}`} alt={label} style={{ width: '20px', height: '20px', marginRight: '10px' }} />
+        //     <span>{label}</span>
+        //     <span>{email}</span>
+        // </div>
+        <div className="flex items-center rounded-xl mt-1 hover:bg-foreground2 p-1">
+            <Avatar>
+                <img src={`http://localhost:5001/api/user/avatar/${avatarUrl || "default.png"}`} alt={label} />
+            </Avatar>
+            <p className="ml-2 font-bold">{label}</p>
         </div>
     );
 

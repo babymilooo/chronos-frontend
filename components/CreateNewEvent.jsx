@@ -26,6 +26,7 @@ import {
 import { Button } from "./ui/button";
 import CalendarService from "@/app/services/CalendarService";
 import SelectUsers from "./SelectUsers";
+import { Textarea } from "@/components/ui/textarea"
 
 
 
@@ -69,7 +70,7 @@ export const CreateNewEvent = ({ date, time, id, handleUpdate, timeIndex, friend
         const formatedStartDate = formatedDate(startDate);
         const formatedEndDate = formatedDate(endDate);
 
-        const result = await CalendarService.createEvent(title, formatedStartDate, formatedEndDate, startTime, endTime, eventType,repeat, priority, coOwners, attendees, id);
+        const result = await CalendarService.createEvent(title, formatedStartDate, formatedEndDate, startTime, endTime, eventType,repeat, priority, coOwners, attendees, description, id);
         if (result) {
             handleUpdate();
         } else {
@@ -160,6 +161,9 @@ export const CreateNewEvent = ({ date, time, id, handleUpdate, timeIndex, friend
                         <div className="grid grid-cols-2 items-center gap-2">
                             <SelectUsers users={availableForCoOwners} setUsers={setCoOwners} className="col-span-1" />
                             <SelectUsers users={availableForAttendees} setUsers={setAttendees} className="col-span-1" />
+                        </div>
+                        <div className="grid grid-cols-1 items-center gap-2">
+                            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />
                         </div>
                         {/* Дополнительные поля Select можно раскомментировать и настроить аналогичным образом */}
                         <DialogClose asChild>
