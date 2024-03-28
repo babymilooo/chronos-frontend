@@ -6,12 +6,12 @@ import { Avatar } from './ui/avatar';
 const SelectUsers = ({ users, setUsers }) => {
     console.log(users);
     // Состояние для хранения текущей темы
-    const [theme, setTheme] = useState(localStorage.getItem('active') || 'dark');
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
 
     useEffect(() => {
         // Функция для обновления темы
         const handleThemeChange = () => {
-            const newTheme = localStorage.getItem('theme') || 'light';
+            const newTheme = localStorage.getItem('theme') || 'dark';
             setTheme(newTheme);
         };
 

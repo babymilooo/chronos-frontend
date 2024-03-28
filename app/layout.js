@@ -6,7 +6,7 @@ export default function RootLayout({ children }) {
   return (
     <>
       <Head lang="en" suppressHydrationWarning>
-        <title>Next.js App</title>
+        <title>CHRONOS</title>
         <link rel="icon" href="../favicon.ico" />
         <meta name="description" content="Next.js App" />
       </Head>
