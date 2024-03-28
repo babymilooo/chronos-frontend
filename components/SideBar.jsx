@@ -33,26 +33,29 @@ export function SideBar({ day }) {
       <p className="flex items-center justify-start font-bold text-2xl border-b p-2 border-foreground">{weekday}</p>
 
       <div className="font-bold mt-2">
-        <p className="text-md font-bold">Today you have</p>
-        {todayData.data && todayData.data.map((event, eventIndex) => {
-          return (
-            <div key={eventIndex} className="flex-col justify-start">
-              <div className="bg-red-500 rounded-sm text-white mt-1 flex items-center justify-between p-1">
-                <p className="text-sm">
-                  {formatDate(event.data.startTime)}
-                </p>
-                <div className="text-sm flex-col justify-center ">
-                  <p>{event.data.name}</p>
-                  <p className="text-xs text-center">{event.data.description}</p>
+        {todayData.data?.length === 0 ? <p>No events for today</p> : (
+          <>
+            <p className="text-md font-bold">Today you have</p>
+            {todayData.data && todayData.data.map((event, eventIndex) => {
+              return (
+                <div key={eventIndex} className="flex-col justify-start">
+                  <div className="bg-red-500 rounded-sm text-white mt-1 flex items-center justify-between p-1">
+                    <p className="text-sm">
+                      {formatDate(event.data.startTime)}
+                    </p>
+                    <div className="text-sm flex-col justify-center ">
+                      <p>{event.data.name}</p>
+                      <p className="text-xs text-center">{event.data.description}</p>
+                    </div>
+                    <p className="text-sm">
+                      {formatDate(event.data.endTime)}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-sm">
-                  {formatDate(event.data.endTime)}
-                </p>
-              </div>
-            </div>
-          );
-        })}
-
+              );
+            })}
+          </>
+        )}
       </div>
     </div>
   );
