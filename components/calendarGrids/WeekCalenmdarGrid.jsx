@@ -2,12 +2,6 @@ import { useContext, useEffect, useState } from 'react';
 
 import EventsUtils from '@/app/utils/events-utils';
 
-import {
-    Popover as MyPopover,
-    PopoverContent as MyPopoverContent,
-    PopoverTrigger as MyPopoverTrigger
-} from '@/components/MyPopover';
-
 import { CreateNewEvent } from '../CreateNewEvent';
 import { RootStoreContext } from '@/app/provider/rootStoreProvider';
 import { ContentInEvents } from '../ContentInEvents';
@@ -58,8 +52,6 @@ const WeekCalendarGrid = ({ week, handleUpdate }) => {
         };
     });
 
-    const startOfWeek = week[0].dateStr;
-
     return (
         <div className="flex flex-col w-full">
             <div className="grid grid-cols-[50px_repeat(7,_1fr)]">
@@ -74,13 +66,13 @@ const WeekCalendarGrid = ({ week, handleUpdate }) => {
                     )
                 })}
             </div>
-            <div className="grid grid-cols-[50px_repeat(7,_1fr)]">
+            {/* <div className="grid grid-cols-[50px_repeat(7,_1fr)]">
                 <div className="p-2 text-center font-bold col-span-1"></div>
                 {groupedEvents.map((dayData, dayIndex) => {
                     const startColumn = EventsUtils.getColumnIndexFromDate(dayData.dateStr, startOfWeek);
 
                     return (
-                        <div key={dayIndex} className="grid grid-cols-7">
+                        <div key={dayIndex} className="relative col-span-auto">
                             {
                                 dayData.multiDayEvents?.map((event, eventIndex) => {
                                     // Вычисляем стиль для каждого события индивидуально
@@ -89,14 +81,18 @@ const WeekCalendarGrid = ({ week, handleUpdate }) => {
                                         gridColumnEnd: `span ${event.data.gridColumnEnd}`,
                                         gridRowStart: 2,
                                     };
-
+                                    const date = new Date(event.startTime);
+                                    const weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
+                                    const day = date.getDate();
+                                    const startTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                                    const endTime = new Date(event.endTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                                     return (
                                         <div
                                             key={`${dayIndex}-${eventIndex}`}
                                             className="flex items-center justify-center p-2 text-center font-bold border-l border-b text-white bg-blue-600"
                                             style={eventStyle}
                                         >
-                                            {event.data.name}
+                                            <ContentInEvents key={eventIndex} eventIndex={eventIndex} day={day} weekday={weekday} startTime={startTime} endTime={endTime} event={event} />
                                         </div>
                                     );
                                 })
@@ -104,7 +100,7 @@ const WeekCalendarGrid = ({ week, handleUpdate }) => {
                         </div>
                     )
                 })}
-            </div>
+            </div> */}
 
             <div className="grid grid-cols-[50px_repeat(7,_1fr)] w-full relative border-foreground2 border">
                 {/* Time slots column */}
@@ -139,34 +135,6 @@ const WeekCalendarGrid = ({ week, handleUpdate }) => {
                                         const startTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                                         const endTime = new Date(event.endTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                                         return (
-                                            // <MyPopover key={eventIndex}>
-                                            //     <MyPopoverTrigger asChild>
-                                            //         <div className="absolute left-0 rounded-md bg-red-500"
-                                            //             style={{
-                                            //                 top: `calc(${event.topOffset}px + 2px)`,
-                                            //                 height: `calc(${event.height}px - 3px)`,
-                                            //                 width: `calc(${event.width}% - 2px)`,
-                                            //                 left: `calc(${event.leftOffset}% + 2px)`,
-                                            //                 zIndex: 30,
-                                            //             }}
-                                            //         >
-                                            //             <div className="p-2">
-                                            //                 <h3 className="text-xs font-bold pl-4 text-white">{event.name}</h3>
-                                            //                 <p className="text-xs">{event.description}</p>
-                                            //             </div>
-                                            //         </div>
-                                            //     </MyPopoverTrigger>
-                                            //     <MyPopoverContent side="left" className="p-4 rounded-md">
-                                            //         <div>
-                                            //             <div className="flex items-end border-b border-content2 p-2">
-                                            //                 <p className="font-bold text-xl">{event.startTime}</p>
-                                            //             </div>
-                                            //             <div>
-                                            //                 <p>{event.name}</p>
-                                            //             </div>
-                                            //         </div>
-                                            //     </MyPopoverContent>
-                                            // </MyPopover>
                                             <ContentInEvents key={eventIndex} eventIndex={eventIndex} day={day} weekday={weekday} startTime={startTime} endTime={endTime} event={event} />
                                         );
                                     })}

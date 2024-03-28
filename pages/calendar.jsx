@@ -1,3 +1,4 @@
+import { SideBar } from '@/components/SideBar';
 import { useContext, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import CalendarService from '@/app/services/CalendarService';
@@ -8,7 +9,6 @@ import CalendarNavigation from '@/components/CalendarNavigation';
 import Navbar from '@/components/Navbar';
 import MonthCalendarGrid from '@/components/calendarGrids/MonthCalendarGrid';
 import WeekCalendarGrid from '@/components/calendarGrids/WeekCalenmdarGrid';
-import { set } from 'lodash';
 import DayCalendarGrid from '@/components/calendarGrids/DayCalendarGrid';
 
 const calendar = () => {
@@ -103,9 +103,7 @@ const calendar = () => {
             <Navbar />
             {/* The rest of the content will flex to take up the remaining space */}
             <div className="flex flex-grow overflow-hidden">
-                <div className="w-1/6 border-r border p-4 bg-background2"> {/* Sidebar */}
-                    <p>Events</p>
-                </div>
+                <SideBar day={day}/>
                 <div className="w-5/6 overflow-auto p-4"> {/* Main content */}
                     <CalendarNavigation setMonthCalendar={updateMonthCalendar} setWeekCalendar={updateWeekCalendar} setDayCalendar={updateDayCalendar} setDate={setDate} mergedCalendar={calendar} active={active} setActive={handleSetActive} />
                     {active === 'month' ? (
