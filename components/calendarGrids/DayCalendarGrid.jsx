@@ -87,6 +87,10 @@ const DayCalendarGrid = ({ day, date, handleUpdate }) => {
 
                     </div>
                 </div>
+                <div
+                    className="absolute bg-red-500 h-[2px] w-full"
+                    style={{ top: `${currentTimeOffset}px`, zIndex: 49 }}
+                />
             </div>
         </div>
     );
