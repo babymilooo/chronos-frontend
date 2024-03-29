@@ -18,7 +18,7 @@ const SettingsPage = () => {
     const { id: idFromQuery } = router.query;
     const [user, setUser] = useState({
         ...userStore.user,
-        // image: userStore.user.image ? `http://localhost:5001/api/user/avatar/${userStore.user.image}` : null,
+        image: userStore.user.image ? `http://localhost:5001/api/user/avatar/${userStore.user.image}` : null,
     });
 
     useEffect(() => {
@@ -81,7 +81,7 @@ const SettingsPage = () => {
                         <div className="relative border border-foreground2 bg-background rounded-t-lg overflow-hidden p-6">
                             <div className="flex justify-center">
                                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                                    <img className="object-cover w-full h-full" src={`http://localhost:5001/api/user/avatar/${userStore.user.image || 'default.png'}`} alt="User avatar" />
+                                    <img className="object-cover w-full h-full" src={`${user.image || 'default.png'}`} alt="User avatar" />
                                     <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                                         <span className="text-white text-lg">Change Image</span>
                                     </div>
